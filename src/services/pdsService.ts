@@ -359,6 +359,9 @@ export async function deleteTodo(id: string): Promise<void> {
  * T06-C21: 완료 버튼을 연달아 두 번 눌러도 완료 기록은 한 건만 남는다 (멱등성).
  * T06-C27: 실행 기록을 저장해도 원래 계획 값은 덮어쓰이지 않는다.
  */
+// In-flight concurrency lock for duplicate key race condition prevention
+const inFlightIdempotencyKeys = new Set<string>();
+
 export async function recordExecution(
   logData: Omit<ExecutionLog, 'id' | 'created_at'>,
 ): Promise<{ success: boolean; log: ExecutionLog; isDuplicate: boolean }> {
@@ -370,40 +373,69 @@ export async function recordExecution(
     return { success: true, log: existing, isDuplicate: true };
   }
 
-  const newLog: ExecutionLog = {
-    ...logData,
-    id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `exec-${Date.now()}`,
-    created_at: new Date().toISOString(),
-  };
-
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const { data, error } = await supabase.from('execution_logs').insert(newLog).select().single();
-      if (!error && data) {
-        const updated = [...currentLogs, data as ExecutionLog];
-        setLocalItem(STORAGE_KEYS.LOGS, updated);
-        return { success: true, log: data as ExecutionLog, isDuplicate: false };
-      }
-      // 만약 DB에서 idempotency_key UNIQUE 제약 조건에 걸렸다면 기존 레코드 조회 반환
-      if (error && error.code === '23505') {
-        const { data: duplicate } = await supabase
-          .from('execution_logs')
-          .select('*')
-          .eq('idempotency_key', logData.idempotency_key)
-          .single();
-        if (duplicate) {
-          return { success: true, log: duplicate as ExecutionLog, isDuplicate: true };
-        }
-      }
-    } catch (err) {
-      console.warn('Supabase recordExecution fallback:', err);
-    }
+  // 2. 동시 병렬 연타(In-flight Race Condition) 락 감지
+  if (inFlightIdempotencyKeys.has(logData.idempotency_key)) {
+    return {
+      success: true,
+      log: {
+        ...logData,
+        id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `exec-dup-${Date.now()}`,
+        created_at: new Date().toISOString(),
+      },
+      isDuplicate: true,
+    };
   }
 
-  const updated = [...currentLogs, newLog];
-  setLocalItem(STORAGE_KEYS.LOGS, updated);
-  memoryStore.logs = updated;
-  return { success: true, log: newLog, isDuplicate: false };
+  inFlightIdempotencyKeys.add(logData.idempotency_key);
+
+  try {
+    const newLog: ExecutionLog = {
+      ...logData,
+      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `exec-${Date.now()}`,
+      created_at: new Date().toISOString(),
+    };
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data, error } = await supabase.from('execution_logs').insert(newLog).select().maybeSingle();
+        if (!error && data) {
+          const updated = [...currentLogs, data as ExecutionLog];
+          setLocalItem(STORAGE_KEYS.LOGS, updated);
+          return { success: true, log: data as ExecutionLog, isDuplicate: false };
+        }
+        // 만약 DB에서 idempotency_key UNIQUE 제약 조건에 걸렸다면 기존 레코드 조회 반환
+        const isConflict =
+          error &&
+          (error.code === '23505' ||
+            (error as any).status === 409 ||
+            (error as any).statusCode === 409 ||
+            error.message?.toLowerCase().includes('duplicate') ||
+            error.message?.toLowerCase().includes('unique') ||
+            error.message?.toLowerCase().includes('idempotency_key'));
+
+        if (isConflict) {
+          const { data: duplicate } = await supabase
+            .from('execution_logs')
+            .select('*')
+            .eq('idempotency_key', logData.idempotency_key)
+            .maybeSingle();
+          if (duplicate) {
+            return { success: true, log: duplicate as ExecutionLog, isDuplicate: true };
+          }
+          return { success: true, log: newLog, isDuplicate: true };
+        }
+      } catch (err) {
+        console.warn('Supabase recordExecution fallback:', err);
+      }
+    }
+
+    const updated = [...currentLogs, newLog];
+    setLocalItem(STORAGE_KEYS.LOGS, updated);
+    memoryStore.logs = updated;
+    return { success: true, log: newLog, isDuplicate: false };
+  } finally {
+    inFlightIdempotencyKeys.delete(logData.idempotency_key);
+  }
 }
 
 export async function getExecutionLogs(todoId?: string): Promise<ExecutionLog[]> {

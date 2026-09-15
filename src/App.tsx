@@ -59,7 +59,9 @@ export const App: React.FC = () => {
 
   // 애플리케이션 데이터 상태
   const [plans, setPlans] = useState<Plan[]>([]);
-  const [currentPlan, setCurrentPlan] = useState<Plan | null>(null);
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
+  const currentPlan = (selectedPlanId ? plans.find((p) => p.id === selectedPlanId) : null) || plans[0] || null;
+
   const [revisions, setRevisions] = useState<PlanRevision[]>([]);
   const [todos, setTodos] = useState<Todo[]>([]);
   const [executionLogs, setExecutionLogs] = useState<ExecutionLog[]>([]);
@@ -83,54 +85,61 @@ export const App: React.FC = () => {
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [exportData, setExportData] = useState<PdsFullDataExport | null>(null);
 
-  // 전체 데이터 로드 함수
-  const reloadData = useCallback(async () => {
+  // 계획 세부 데이터 로드 함수 (특정 planId 기준)
+  const loadPlanDetails = useCallback(async (planId: string) => {
+    const [revs, planTodos, logs, revList, calculatedMetrics] = await Promise.all([
+      getPlanRevisions(planId),
+      getTodos(planId),
+      getExecutionLogs(),
+      getReviews(planId),
+      calculateSeeMetrics(planId),
+    ]);
+    setRevisions(revs);
+    setTodos(planTodos);
+    setExecutionLogs(logs);
+    setReviews(revList);
+    setMetrics(calculatedMetrics);
+  }, []);
+
+  // 전체 계획 목록 로드 함수
+  const loadPlans = useCallback(async () => {
     const allPlans = await getPlans();
     setPlans(allPlans);
+    return allPlans;
+  }, []);
 
-    const activePlan =
-      allPlans.length > 0
-        ? currentPlan
-          ? allPlans.find((p) => p.id === currentPlan.id) || allPlans[0]
-          : allPlans[0]
-        : null;
-    setCurrentPlan(activePlan);
-
-    if (activePlan) {
-      const [revs, planTodos, logs, revList, calculatedMetrics] = await Promise.all([
-        getPlanRevisions(activePlan.id),
-        getTodos(activePlan.id),
-        getExecutionLogs(),
-        getReviews(activePlan.id),
-        calculateSeeMetrics(activePlan.id),
-      ]);
-      setRevisions(revs);
-      setTodos(planTodos);
-      setExecutionLogs(logs);
-      setReviews(revList);
-      setMetrics(calculatedMetrics);
-    }
-  }, [currentPlan]);
-
+  // 마운트 시 전체 계획 목록 로드
   useEffect(() => {
     const timer = setTimeout(() => {
-      void reloadData();
+      void loadPlans();
     }, 0);
     return () => clearTimeout(timer);
-  }, [reloadData]);
+  }, [loadPlans]);
+
+  // 활성 계획 변경 시 세부 데이터 로드 (currentPlan.id 원시값 기준 단일 실행)
+  useEffect(() => {
+    if (!currentPlan?.id) return;
+    const planId = currentPlan.id;
+    const timer = setTimeout(() => {
+      void loadPlanDetails(planId);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [currentPlan?.id, loadPlanDetails]);
 
   // 핸들러: 계획 수정 (T06-C08 원본 스냅샷 보존)
   const handleUpdatePlan = async (data: Partial<Omit<Plan, 'id' | 'created_at'>>) => {
     if (!currentPlan) return;
     await updatePlan(currentPlan.id, data);
-    await reloadData();
+    await loadPlans();
+    await loadPlanDetails(currentPlan.id);
   };
 
   // 핸들러: 새 계획 생성 (T06-C33 피드백 연계)
   const handleCreatePlan = async (data: Omit<Plan, 'id' | 'created_at' | 'updated_at'>) => {
     const created = await createPlan(data);
-    setCurrentPlan(created);
-    await reloadData();
+    await loadPlans();
+    setSelectedPlanId(created.id);
+    await loadPlanDetails(created.id);
   };
 
   // 핸들러: 할 일 생성 (T06-C09)
@@ -140,35 +149,45 @@ export const App: React.FC = () => {
     },
   ) => {
     const created = await createTodo(todoData);
-    await reloadData();
+    if (currentPlan) {
+      await loadPlanDetails(currentPlan.id);
+    }
     return created;
   };
 
   // 핸들러: 할 일 수정 (T06-C10)
   const handleUpdateTodo = async (id: string, data: Partial<Todo>) => {
     const updated = await updateTodo(id, data);
-    await reloadData();
+    if (currentPlan) {
+      await loadPlanDetails(currentPlan.id);
+    }
     return updated;
   };
 
   // 핸들러: 할 일 완료 (T06-C11)
   const handleCompleteTodo = async (id: string) => {
     const completed = await completeTodo(id);
-    await reloadData();
+    if (currentPlan) {
+      await loadPlanDetails(currentPlan.id);
+    }
     return completed;
   };
 
   // 핸들러: 할 일 되돌리기 (T06-C12)
   const handleRevertTodo = async (id: string) => {
     const reverted = await revertTodo(id);
-    await reloadData();
+    if (currentPlan) {
+      await loadPlanDetails(currentPlan.id);
+    }
     return reverted;
   };
 
   // 핸들러: 할 일 삭제 (T06-C13)
   const handleDeleteTodo = async (id: string) => {
     await deleteTodo(id);
-    await reloadData();
+    if (currentPlan) {
+      await loadPlanDetails(currentPlan.id);
+    }
   };
 
   // 핸들러: 실행 기록 등록 (T06-C21 멱등성 연타 방지)
@@ -181,7 +200,9 @@ export const App: React.FC = () => {
     idempotency_key: string;
   }) => {
     const res = await recordExecution(logData);
-    await reloadData();
+    if (currentPlan) {
+      await loadPlanDetails(currentPlan.id);
+    }
     return res;
   };
 
@@ -190,7 +211,7 @@ export const App: React.FC = () => {
     if (!currentPlan) return;
     await saveReview(currentPlan.id, note);
     setPrefilledNextActionNote(note);
-    await reloadData();
+    await loadPlanDetails(currentPlan.id);
   };
 
   // 핸들러: 전체 데이터 내보내기 모달 열기 (T06-C36)
@@ -201,9 +222,13 @@ export const App: React.FC = () => {
   };
 
   // 핸들러: 시드 데이터 리셋
-  const handleResetToSeed = () => {
+  const handleResetToSeed = async () => {
     resetToSeedData();
-    reloadData();
+    const allPlans = await loadPlans();
+    if (allPlans.length > 0) {
+      setSelectedPlanId(allPlans[0].id);
+      await loadPlanDetails(allPlans[0].id);
+    }
   };
 
   return (
@@ -239,7 +264,7 @@ export const App: React.FC = () => {
               {plans.map((p) => (
                 <button
                   key={p.id}
-                  onClick={() => setCurrentPlan(p)}
+                  onClick={() => setSelectedPlanId(p.id)}
                   className={`hover-lift active-press cursor-pointer rounded-xl px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-all ${
                     currentPlan?.id === p.id
                       ? 'bg-indigo-600 text-white shadow-xs'

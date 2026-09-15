@@ -120,8 +120,17 @@ export async function executeSingleTest(spec: FixedTestCase): Promise<TestExecut
 
       case 'T06-TEST-04': {
         // 할 일 상태 전이 및 소프트 삭제 검증 (T06-C11 ~ T06-C13)
+        const testPlan = await createPlan({
+          title: '상태 전이 테스트 계획',
+          start_date: '2026-09-15',
+          end_date: '2026-09-22',
+          priority: 'medium',
+          success_criteria: '상태 전이 검증',
+          estimated_minutes: 30,
+        });
+
         const todo = await createTodo({
-          plan_id: 'dummy-plan-id',
+          plan_id: testPlan.id,
           content: '상태 전이 테스트 할 일',
           due_date: '2026-09-19',
           priority: 'medium',
@@ -204,8 +213,17 @@ export async function executeSingleTest(spec: FixedTestCase): Promise<TestExecut
 
       case 'T06-TEST-06': {
         // 실행 기록 저장 시 원래 계획 값 불변 보존 (T06-C27)
+        const testPlan = await createPlan({
+          title: '불변성 테스트 계획',
+          start_date: '2026-09-15',
+          end_date: '2026-09-22',
+          priority: 'high',
+          success_criteria: '불변성 검증',
+          estimated_minutes: 60,
+        });
+
         const todo = await createTodo({
-          plan_id: 'p1',
+          plan_id: testPlan.id,
           content: '불변성 검증 할 일',
           due_date: '2026-09-16',
           priority: 'high',
@@ -234,9 +252,27 @@ export async function executeSingleTest(spec: FixedTestCase): Promise<TestExecut
 
       case 'T06-TEST-07': {
         // 완료 버튼 연타 시 동일 멱등키에 의한 중복 저장 방어 (T06-C21, T06-C22)
+        const testPlan = await createPlan({
+          title: '연타 멱등성 검증 계획',
+          start_date: '2026-09-15',
+          end_date: '2026-09-22',
+          priority: 'high',
+          success_criteria: '연타 멱등성 검증',
+          estimated_minutes: 60,
+        });
+
+        const testTodo = await createTodo({
+          plan_id: testPlan.id,
+          content: '연타 검증용 할 일',
+          due_date: '2026-09-18',
+          priority: 'high',
+          tags: ['StressTest'],
+          estimated_minutes: 60,
+        });
+
         const fixedKey = `stress-test-key-${Date.now()}`;
         const payload = {
-          todo_id: 'todo-stress-test',
+          todo_id: testTodo.id,
           start_time: '2026-09-15T14:00:00+09:00',
           end_time: '2026-09-15T15:00:00+09:00',
           actual_minutes: 60,
@@ -299,9 +335,18 @@ export async function executeSingleTest(spec: FixedTestCase): Promise<TestExecut
 
       case 'T06-TEST-10': {
         // XSS 방어 및 전체 데이터 단일 JSON 내보내기 검증 (T06-C36, T06-C57, T06-C58)
+        const testPlan = await createPlan({
+          title: '보안 검증 계획',
+          start_date: '2026-09-15',
+          end_date: '2026-09-22',
+          priority: 'low',
+          success_criteria: 'XSS 방어 검증',
+          estimated_minutes: 15,
+        });
+
         const xssPayload = '<script>alert("xss")</script>';
         const xssTodo = await createTodo({
-          plan_id: 'xss-plan',
+          plan_id: testPlan.id,
           content: xssPayload,
           due_date: '2026-09-20',
           priority: 'low',
