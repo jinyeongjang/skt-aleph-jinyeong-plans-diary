@@ -1,0 +1,40 @@
+{
+  "name": "skt-aleph-jinyeong-plandosee-diary-myplan",
+  "description": "과제 6: 플랜두씨 다이어리 1 — 내 계획과 실제를 담는 앱 (Plan-Do-See Diary)",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "node --experimental-strip-types scripts/run-tests.ts",
+    "prepare": "git config --local commit.template .gitmessage.txt || true",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@number-flow/react": "^0.6.2",
+    "@supabase/supabase-js": "^2.116.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^13.2.0",
+    "lucide-react": "^1.43.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.0",
+    "oxlint": "^1.79.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.2"
+  }
+}

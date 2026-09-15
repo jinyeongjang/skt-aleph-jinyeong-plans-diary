@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Plan-Do-See Diary Database Schema Specification v2",
+  "version": "2.0.0",
+  "description": "SKT ALEPH 과제 6: 플랜두씨 다이어리 1 — 데이터베이스 표·항목·관계 및 날짜 규칙 계약 명세서",
+  "database": {
+    "engine": "PostgreSQL (Supabase)",
+    "timeZone": "Asia/Seoul (KST, UTC+09:00)",
+    "tables": {
+      "plans": {
+        "description": "상위 계획 (카드 1 - T06-C04~C08)",
+        "primaryKey": "id",
+        "columns": {
+          "id": { "type": "uuid", "description": "계획 고유 식별자 (UUID)" },
+          "title": { "type": "text", "description": "계획 제목" },
+          "start_date": { "type": "date", "description": "계획 시작일 (YYYY-MM-DD)" },
+          "end_date": { "type": "date", "description": "계획 종료일 (YYYY-MM-DD)" },
+          "priority": { "type": "text", "enum": ["high", "medium", "low"], "description": "계획 우선순위" },
+          "success_criteria": { "type": "text", "description": "성공 기준 (T06-C06)" },
+          "estimated_minutes": { "type": "integer", "description": "예상 시간(분) (T06-C07)" },
+          "created_at": { "type": "timestamptz", "description": "생성 일시" },
+          "updated_at": { "type": "timestamptz", "description": "최종 수정 일시" }
+        },
+        "relationships": {
+          "revisions": { "type": "has_many", "target": "plan_revisions", "foreignKey": "plan_id" },
+          "todos": { "type": "has_many", "target": "todos", "foreignKey": "plan_id" },
+          "reviews": { "type": "has_many", "target": "reviews", "foreignKey": "plan_id" }
+        }
+      },
+      "plan_revisions": {
+        "description": "계획 수정 전 스냅샷 이력 (T06-C08: 계획을 고쳐도 고치기 전 계획이 그대로 남아 있다)",
+        "primaryKey": "id",
+        "foreignKeys": [{ "column": "plan_id", "references": "plans(id)", "onDelete": "CASCADE" }],
+        "columns": {
+          "id": { "type": "uuid", "description": "수정 이력 식별자" },
+          "plan_id": { "type": "uuid", "description": "대상 계획 ID" },
+          "revision_number": { "type": "integer", "description": "수정 차수 (1, 2, ...)" },
+          "title": { "type": "text", "description": "수정 전 계획 제목" },
+          "start_date": { "type": "date", "description": "수정 전 시작일" },
+          "end_date": { "type": "date", "description": "수정 전 종료일" },
+          "priority": { "type": "text", "description": "수정 전 우선순위" },
+          "success_criteria": { "type": "text", "description": "수정 전 성공 기준" },
+          "estimated_minutes": { "type": "integer", "description": "수정 전 예상 시간(분)" },
+          "revised_at": { "type": "timestamptz", "description": "수정 시점 타임스탬프" }
+        }
+      },
+      "todos": {
+        "description": "계획에 딸린 할 일 (카드 2 - T06-C09~C20)",
+        "primaryKey": "id",
+        "foreignKeys": [{ "column": "plan_id", "references": "plans(id)", "onDelete": "CASCADE" }],
+        "columns": {
+          "id": { "type": "uuid", "description": "할 일 고유 식별자" },
+          "plan_id": { "type": "uuid", "description": "소속 계획 ID" },
+          "content": { "type": "text", "description": "할 일 내용" },
+          "status": { "type": "text", "enum": ["pending", "completed"], "description": "진행 상태 (T06-C11, C12)" },
+          "due_date": { "type": "date", "description": "마감일 (YYYY-MM-DD) (T06-C14)" },
+          "priority": { "type": "text", "enum": ["high", "medium", "low"], "description": "우선순위 (T06-C15)" },
+          "tags": { "type": "array[text]", "description": "태그 목록 (T06-C16)" },
+          "estimated_minutes": { "type": "integer", "description": "예상 소요 시간(분) (T06-C17)" },
+          "is_deleted": { "type": "boolean", "default": false, "description": "삭제 여부 (T06-C13 소프트 삭제)" },
+          "completed_at": { "type": "timestamptz", "nullable": true, "description": "완료 처리 시점" },
+          "created_at": { "type": "timestamptz", "description": "생성 일시" },
+          "updated_at": { "type": "timestamptz", "description": "수정 일시" }
+        },
+        "relationships": {
+          "execution_logs": { "type": "has_many", "target": "execution_logs", "foreignKey": "todo_id" }
+        }
+      },
+      "execution_logs": {
+        "description": "실제 실행 기록 (카드 3 - T06-C21~C27)",
+        "primaryKey": "id",
+        "foreignKeys": [{ "column": "todo_id", "references": "todos(id)", "onDelete": "CASCADE" }],
+        "uniqueConstraints": [{ "columns": ["idempotency_key"], "description": "연타 시 중복 등록 방지 (T06-C21)" }],
+        "columns": {
+          "id": { "type": "uuid", "description": "실행 기록 고유 식별자" },
+          "todo_id": { "type": "uuid", "description": "연관 할 일 ID" },
+          "start_time": { "type": "timestamptz", "description": "실제 시작 시각 (T06-C23)" },
+          "end_time": { "type": "timestamptz", "description": "실제 종료 시각 (T06-C24)" },
+          "actual_minutes": { "type": "integer", "description": "실제 걸린 시간(분) (T06-C25)" },
+          "blocker_reason": { "type": "text", "nullable": true, "description": "막혔던 이유 (T06-C26)" },
+          "idempotency_key": { "type": "text", "description": "멱등성 고유 식별 키 (중복 방지)" },
+          "created_at": { "type": "timestamptz", "description": "기록 생성 일시" }
+        }
+      },
+      "reviews": {
+        "description": "돌아보기 및 다음 계획 연계 (카드 4 - T06-C28~C33)",
+        "primaryKey": "id",
+        "foreignKeys": [{ "column": "plan_id", "references": "plans(id)", "onDelete": "CASCADE" }],
+        "columns": {
+          "id": { "type": "uuid", "description": "회고 고유 식별자" },
+          "plan_id": { "type": "uuid", "description": "대상 계획 ID" },
+          "next_action_note": { "type": "text", "description": "다음 계획으로 넘길 고칠 점 한 줄 (T06-C33)" },
+          "created_at": { "type": "timestamptz", "description": "회고 일시" }
+        }
+      }
+    }
+  },
+  "rules": {
+    "dateRules": {
+      "timeZone": "Asia/Seoul",
+      "timeZoneOffset": "+09:00",
+      "dateFormat": "YYYY-MM-DD",
+      "dateTimeFormat": "YYYY-MM-DDTHH:mm:ss+09:00",
+      "overdueRule": "서울 시간(Asia/Seoul) 기준 오늘(today) 이전 날짜(due_date < today)이면서 미완료(status !== 'completed')인 건. 완료된 할 일은 지연으로 두 번 세지 않음 (T06-C30)"
+    },
+    "sortingRules": {
+      "standardSort": [
+        { "field": "due_date", "order": "asc", "description": "1차: 마감일 오름차순" },
+        {
+          "field": "priority",
+          "order": "desc",
+          "values": ["high", "medium", "low"],
+          "description": "2차: 우선순위 높은 순"
+        },
+        { "field": "created_at", "order": "asc", "description": "3차 타이브레이커: 등록 일시 오름차순" }
+      ],
+      "displayNoticeRequired": true,
+      "noticeText": "정렬 기준: 마감일 빠른 순 ➔ 우선순위(높음>보통>낮음) ➔ 등록순"
+    },
+    "integrityRules": {
+      "planImmutability": "실행 기록을 저장해도 원래 계획의 예상 시간 등 계획 및 할 일 기본 필드는 덮어쓰이지 않음 (T06-C27)",
+      "idempotencyRule": "완료 버튼 연타 시 동일 멱등키를 활용하여 실행 기록은 정확히 1건만 저장되고, 돌아보기 완료 수도 정확히 1만 증가함 (T06-C21, T06-C22)",
+      "xssSanitization": "모든 사용자 텍스트 입력은 스크립트 실행 방지를 위해 안전한 React DOM 텍스트 노드로 바인딩됨 (T06-C57)",
+      "credentialSafety": "프런트엔드 번들, 네트워크 응답, Git 기록 어디에도 비밀키(service_role) 원문이 노출되지 않음 (T06-C58)"
+    }
+  }
+}
