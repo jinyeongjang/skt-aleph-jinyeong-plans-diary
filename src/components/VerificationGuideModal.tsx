@@ -272,10 +272,9 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">② 내가 직접 판단한 일</span>
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-neutral-800 dark:text-neutral-200">
-                  더미 데이터 대신 진영님의 공식 블로그(https://skt-aleph-jinyeongblog.vercel.app)에 수록된 실제 교육
-                  과정인 'SKT ALEPH 1기 기업 현장 중심 보안 & 네트워크 인프라 트랙'의 핵심 커리큘럼(TCP/IP, DNS, VLAN
-                  라우팅, 리눅스 방화벽, Snort IDS/IPS, 제로 트러스트)을 토대로 실제 계획과 할 일, 실행 기록을
-                  반영했습니다.
+                  직접 만들었던 블로그(https://skt-aleph-jinyeongblog.vercel.app)에 수록된 실제 교육 과정인 'SKT ALEPH
+                  1기 기업 현장 중심 보안 & 네트워크 인프라 트랙'의 핵심 커리큘럼(TCP/IP, DNS, VLAN 라우팅, 리눅스
+                  방화벽, Snort IDS/IPS, 제로 트러스트)을 토대로 실제 계획과 할 일, 실행 기록을 반영했습니다.
                 </p>
               </div>
 
