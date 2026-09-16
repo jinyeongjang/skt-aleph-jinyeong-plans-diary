@@ -46,10 +46,16 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
       }}
       className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
     >
-      <div className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] dark:border-neutral-800/90 dark:bg-neutral-900 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
+        {/* Top Rimlight */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+          aria-hidden="true"
+        />
+
         {/* Header */}
-        <div className="relative flex items-center justify-between border-b border-neutral-200 px-6 py-5 dark:border-neutral-800">
-          <div className="flex items-center gap-3">
+        <div className="relative flex items-center justify-between border-b border-neutral-200/80 px-6 py-5 dark:border-neutral-800/80">
+          <div className="flex items-center gap-3.5">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-blue-500/20 bg-blue-50 text-blue-600 dark:border-blue-400/30 dark:bg-blue-950/50 dark:text-blue-400">
               <FileJson className="h-5 w-5" />
             </div>
@@ -62,14 +68,14 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
                   T06-C36
                 </span>
               </div>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                 계획·할 일·실행 기록·돌아보기 데이터를 단일 JSON 파일로 백업합니다.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="hover-lift flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+            className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
           >
             <X className="h-4.5 w-4.5" />
           </button>
@@ -78,25 +84,25 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
         {/* Content */}
         <div className="custom-scrollbar space-y-4 overflow-y-auto p-6">
           <div className="grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
-            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-3.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-3.5 shadow-xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
               <span className="block text-xs font-semibold text-neutral-500">계획</span>
               <strong className="mt-1 block text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {exportData.plans.length}건
               </strong>
             </div>
-            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-3.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-3.5 shadow-xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
               <span className="block text-xs font-semibold text-neutral-500">할 일</span>
               <strong className="mt-1 block text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {exportData.todos.length}건
               </strong>
             </div>
-            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-3.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-3.5 shadow-xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
               <span className="block text-xs font-semibold text-neutral-500">실행 기록</span>
               <strong className="mt-1 block text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {exportData.executionLogs.length}건
               </strong>
             </div>
-            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-3.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-3.5 shadow-xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
               <span className="block text-xs font-semibold text-neutral-500">수정 이력</span>
               <strong className="mt-1 block text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {exportData.planRevisions.length}건
@@ -109,14 +115,14 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
               <span className="font-semibold">내보낼 JSON 데이터 미리보기</span>
               <span className="font-mono">{jsonString.length.toLocaleString()} bytes</span>
             </div>
-            <pre className="custom-scrollbar max-h-56 overflow-y-auto rounded-2xl border border-neutral-800 bg-neutral-950 p-4 font-mono text-xs text-neutral-300 shadow-inner">
+            <pre className="custom-scrollbar max-h-56 overflow-y-auto rounded-2xl border border-neutral-800 bg-neutral-950/95 p-4 font-mono text-xs text-neutral-300 shadow-inner">
               {jsonString}
             </pre>
           </div>
         </div>
 
         {/* Footer actions */}
-        <div className="flex flex-col items-center justify-between gap-3 border-t border-neutral-100 px-6 py-4 sm:flex-row dark:border-neutral-800/80">
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-neutral-100/80 px-6 py-4 sm:flex-row dark:border-neutral-800/80">
           <button
             type="button"
             onClick={() => {
@@ -125,7 +131,7 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
                 onClose();
               }
             }}
-            className="hover-lift active-press inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-50/40 px-3.5 py-2 text-xs font-bold text-rose-600 transition-colors hover:bg-rose-100/70 sm:w-auto dark:border-rose-500/30 dark:bg-rose-950/30 dark:text-rose-400"
+            className="hover-lift active-press inline-flex w-full items-center justify-center gap-1.5 rounded-2xl border border-rose-500/30 bg-rose-50/40 px-3.5 py-2.5 text-xs font-bold text-rose-600 transition-colors hover:bg-rose-100/70 sm:w-auto dark:border-rose-500/30 dark:bg-rose-950/30 dark:text-rose-400"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             <span>기본 데이터로 초기화</span>
@@ -135,7 +141,7 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
             <button
               type="button"
               onClick={handleCopy}
-              className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-neutral-200 bg-white/80 px-4 py-2.5 text-xs font-bold text-neutral-800 shadow-2xs hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-700"
+              className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-2xl border border-neutral-200/80 bg-white/80 px-4 py-2.5 text-xs font-bold text-neutral-800 shadow-2xs hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-700"
             >
               {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
               <span>{copied ? '복사 완료' : '클립보드 복사'}</span>
@@ -143,7 +149,7 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
             <button
               type="button"
               onClick={handleDownload}
-              className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-blue-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-xs transition-colors hover:bg-blue-700"
+              className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-blue-600/25 transition-all hover:from-blue-500 hover:to-indigo-500"
             >
               <Download className="h-3.5 w-3.5" />
               <span>파일로 다운로드 (.json)</span>

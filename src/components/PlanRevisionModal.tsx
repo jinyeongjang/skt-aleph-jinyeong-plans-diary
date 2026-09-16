@@ -19,12 +19,18 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="animate-in fade-in fixed inset-0 z-100 flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
+      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
     >
-      <div className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] dark:border-neutral-800/90 dark:bg-neutral-900 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
+        {/* Top Rimlight */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+          aria-hidden="true"
+        />
+
         {/* Header */}
-        <div className="relative flex items-center justify-between border-b border-neutral-200 px-6 py-5 dark:border-neutral-800">
-          <div className="flex items-center gap-3">
+        <div className="relative flex items-center justify-between border-b border-neutral-200/80 px-6 py-5 dark:border-neutral-800/80">
+          <div className="flex items-center gap-3.5">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-50 text-indigo-600 dark:border-indigo-400/30 dark:bg-indigo-950/50 dark:text-indigo-400">
               <History className="h-5 w-5" />
             </div>
@@ -37,14 +43,14 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
                   T06-C08 원본 보존
                 </span>
               </div>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                 계획을 수정해도 처음 세운 원본 계획 스냅샷이 영구 보존됩니다.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="hover-lift flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+            className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
           >
             <X className="h-4.5 w-4.5" />
           </button>
@@ -53,13 +59,15 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
         {/* Content */}
         <div className="custom-scrollbar space-y-6 overflow-y-auto p-6">
           {/* 현재 활성 계획 (Current Plan) */}
-          <div className="rounded-2xl border border-indigo-500/30 bg-indigo-50/70 p-5 shadow-2xs dark:border-indigo-400/30 dark:bg-indigo-950/40">
+          <div className="rounded-2xl border border-indigo-500/30 bg-indigo-50/70 p-5 shadow-xs dark:border-indigo-400/30 dark:bg-indigo-950/40">
             <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-bold text-white shadow-2xs">
+                <span className="rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-0.5 text-xs font-bold text-white shadow-xs">
                   현재 최신 계획 (Active)
                 </span>
-                <span className="font-mono text-xs text-neutral-500">ID: {currentPlan.id.slice(0, 8)}...</span>
+                <span className="font-mono text-xs text-neutral-500 dark:text-neutral-400">
+                  ID: {currentPlan.id.slice(0, 8)}...
+                </span>
               </div>
               <span className="text-xs text-neutral-500 dark:text-neutral-400">
                 최종 수정: {new Date(currentPlan.updated_at).toLocaleString('ko-KR')}
@@ -94,7 +102,7 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
               <h4 className="flex items-center gap-2 text-sm font-bold text-neutral-900 dark:text-neutral-100">
                 <span>보존된 수정 전 스냅샷 ({revisions.length}건)</span>
                 {revisions.length > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     T06-C08 충족
                   </span>
@@ -117,10 +125,10 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
                 {revisions.map((rev) => (
                   <div
                     key={rev.id}
-                    className="hover-lift rounded-2xl border border-neutral-200 bg-neutral-50/80 p-4.5 shadow-2xs transition-colors dark:border-neutral-800 dark:bg-neutral-950/60"
+                    className="hover-lift rounded-2xl border border-neutral-200 bg-neutral-50/80 p-4.5 shadow-xs transition-colors dark:border-neutral-800 dark:bg-neutral-950/60"
                   >
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="rounded-lg border border-neutral-200 bg-white px-2.5 py-1 text-xs font-bold text-neutral-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+                      <span className="rounded-xl border border-neutral-200 bg-white px-2.5 py-1 text-xs font-bold text-neutral-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
                         수정 차수 #{rev.revision_number}
                       </span>
                       <span className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -147,10 +155,10 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end border-t border-neutral-200 px-6 py-4 dark:border-neutral-800">
+        <div className="flex justify-end border-t border-neutral-200/80 px-6 py-4 dark:border-neutral-800/80">
           <button
             onClick={onClose}
-            className="hover-lift cursor-pointer rounded-xl border border-neutral-200 bg-neutral-100 px-5 py-2.5 text-xs font-bold text-neutral-800 transition-all hover:bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+            className="hover-lift active-press cursor-pointer rounded-2xl border border-neutral-200/80 bg-neutral-100/80 px-5 py-2.5 text-xs font-bold text-neutral-800 transition-all hover:bg-neutral-200 dark:border-neutral-700/80 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-700"
           >
             닫기
           </button>

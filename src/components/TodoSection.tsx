@@ -124,25 +124,44 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
   }, [todos, searchKeyword, selectedTag, selectedPriority, filterMode, blockedTodoIds]);
 
   return (
-    <section id="todo-section" className="glass-card rounded-3xl p-6 sm:p-7">
+    <section
+      id="todo-section"
+      className="relative overflow-hidden rounded-3xl border border-white/80 bg-white/75 p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.06)] backdrop-blur-2xl transition-all duration-300 sm:p-8 dark:border-white/10 dark:bg-neutral-900/70 dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]"
+    >
+      {/* 상단 은은한 림라이트 (유리 반사 효과) */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
+        aria-hidden="true"
+      />
+
+      {/* Decorative subtle ambient glows */}
+      <div
+        className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl dark:bg-emerald-400/15"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-teal-500/10 blur-3xl dark:bg-teal-400/15"
+        aria-hidden="true"
+      />
+
       {/* Section Header */}
-      <div className="flex flex-col justify-between gap-4 border-b border-neutral-200/80 pb-5 sm:flex-row sm:items-center dark:border-neutral-800/80">
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 shadow-inner dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
+      <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-neutral-200/70 pb-6 sm:flex-row sm:items-center dark:border-white/[0.08]">
+        <div className="flex items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/20 via-emerald-600/10 to-teal-500/15 text-emerald-600 shadow-inner backdrop-blur-md dark:border-emerald-400/30 dark:text-emerald-400">
             <CheckSquare className="h-6 w-6" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-bold tracking-wider text-emerald-600 uppercase dark:text-emerald-400">
                 카드 2 — Do (할 일 다루기)
               </span>
-              <span className="glass-pill inline-flex items-center gap-1 rounded-full border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
+              <span className="glass-pill inline-flex items-center gap-1 rounded-full border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
                 <CheckCircle2 className="h-3 w-3" /> T06-C09~C20 충족
               </span>
             </div>
-            <h2 className="mt-0.5 flex items-center gap-2.5 text-xl font-bold tracking-tight text-neutral-900 sm:text-2xl dark:text-neutral-100">
+            <h2 className="mt-1 flex items-center gap-2.5 text-xl font-bold tracking-tight text-neutral-900 sm:text-2xl dark:text-neutral-100">
               할 일 목록
-              <span className="glass-pill rounded-full px-2.5 py-0.5 font-mono text-xs font-bold text-neutral-600 dark:text-neutral-300">
+              <span className="inline-flex items-center rounded-full border border-neutral-200/80 bg-neutral-100/80 px-2.5 py-0.5 font-mono text-xs font-bold text-neutral-700 backdrop-blur-md dark:border-neutral-700/80 dark:bg-neutral-800/80 dark:text-neutral-300">
                 {filteredTodos.length} / {todos.length}
               </span>
             </h2>
@@ -151,29 +170,31 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
 
         <button
           onClick={() => setIsAddOpen(true)}
-          className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 self-start rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-emerald-700 sm:self-auto"
+          className="hover-lift active-press group inline-flex cursor-pointer items-center gap-2 self-start rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/25 transition-all hover:from-emerald-500 hover:to-teal-500 sm:self-auto"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
           <span>할 일 추가 (T06-C09)</span>
         </button>
       </div>
 
       {/* T06-C20: 화면에 밝혀 둔 정렬 기준 고지 배너 */}
-      <div className="glass-panel mt-5 flex flex-wrap items-center justify-between gap-2.5 rounded-2xl border-indigo-500/25 bg-indigo-500/10 px-4 py-2.5 text-xs shadow-2xs dark:border-indigo-400/20 dark:bg-indigo-500/10">
-        <div className="flex items-center gap-2 font-medium text-indigo-950 dark:text-indigo-200">
-          <ArrowUpDown className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
-          <span className="leading-normal">
+      <div className="relative z-10 mt-5 flex flex-wrap items-center justify-between gap-2.5 rounded-2xl border border-indigo-500/20 bg-indigo-500/[0.07] px-4 py-3 text-xs shadow-xs backdrop-blur-md dark:border-indigo-400/20 dark:bg-indigo-500/10">
+        <div className="flex items-center gap-2.5 font-medium text-indigo-950 dark:text-indigo-200">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-600 dark:bg-indigo-400/20 dark:text-indigo-300">
+            <ArrowUpDown className="h-3.5 w-3.5" />
+          </div>
+          <span className="leading-relaxed">
             <strong className="font-bold text-indigo-900 dark:text-indigo-300">화면 명시 정렬 기준 (T06-C20):</strong>{' '}
             1차 마감일 빠른 순 ➔ 2차 우선순위(High &gt; Medium &gt; Low) ➔ 3차 등록 일시 순
           </span>
         </div>
-        <span className="glass-pill rounded-full px-2.5 py-0.5 font-mono text-[11px] font-semibold text-indigo-600 shadow-2xs dark:text-indigo-400">
+        <span className="inline-flex items-center gap-1 rounded-full border border-indigo-500/20 bg-white/70 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-indigo-700 shadow-2xs backdrop-blur-md dark:border-indigo-400/30 dark:bg-neutral-900/70 dark:text-indigo-300">
           결과 불변성 보장
         </span>
       </div>
 
       {/* Search & Filter Toolbar (T06-C18, T06-C19) */}
-      <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="relative z-10 mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
         {/* Search */}
         <div className="relative">
           <Search className="absolute top-2.5 left-3.5 h-4 w-4 text-neutral-400" />
@@ -182,17 +203,17 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
             placeholder="할 일 또는 태그 검색... (T06-C18)"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
-            className="w-full rounded-xl border border-neutral-200/80 bg-white py-2 pr-3.5 pl-9 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+            className="w-full rounded-2xl border border-neutral-200/80 bg-white/70 py-2.5 pr-3.5 pl-9 text-xs text-neutral-900 shadow-xs backdrop-blur-md transition-all placeholder:text-neutral-400 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-none dark:border-neutral-800/80 dark:bg-neutral-900/70 dark:text-neutral-100 dark:focus:bg-neutral-900"
           />
         </div>
 
         {/* Status / Metric Filter Tabs (T06-C19 & T06-C83) */}
-        <div className="flex items-center gap-1 overflow-x-auto rounded-xl border border-neutral-200/80 bg-neutral-100/80 p-1 text-xs backdrop-blur-xs dark:border-neutral-800 dark:bg-neutral-900/80">
+        <div className="flex items-center gap-1 overflow-x-auto rounded-2xl border border-neutral-200/80 bg-white/50 p-1 text-xs backdrop-blur-md dark:border-neutral-800/80 dark:bg-neutral-900/50">
           <button
             onClick={() => onFilterModeChange('all')}
-            className={`cursor-pointer rounded-lg px-2.5 py-1 font-medium transition-all ${
+            className={`cursor-pointer rounded-xl px-2.5 py-1.5 font-medium transition-all ${
               filterMode === 'all'
-                ? 'bg-white text-neutral-900 shadow-xs dark:bg-neutral-800 dark:text-neutral-100'
+                ? 'bg-white font-bold text-neutral-900 shadow-xs dark:bg-neutral-800 dark:text-neutral-100'
                 : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
             }`}
           >
@@ -200,9 +221,9 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
           </button>
           <button
             onClick={() => onFilterModeChange('pending')}
-            className={`cursor-pointer rounded-lg px-2.5 py-1 font-medium transition-all ${
+            className={`cursor-pointer rounded-xl px-2.5 py-1.5 font-medium transition-all ${
               filterMode === 'pending'
-                ? 'bg-white text-neutral-900 shadow-xs dark:bg-neutral-800 dark:text-neutral-100'
+                ? 'bg-white font-bold text-neutral-900 shadow-xs dark:bg-neutral-800 dark:text-neutral-100'
                 : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
             }`}
           >
@@ -210,9 +231,9 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
           </button>
           <button
             onClick={() => onFilterModeChange('completed')}
-            className={`cursor-pointer rounded-lg px-2.5 py-1 font-medium transition-all ${
+            className={`cursor-pointer rounded-xl px-2.5 py-1.5 font-medium transition-all ${
               filterMode === 'completed'
-                ? 'bg-white font-bold text-emerald-600 shadow-xs dark:bg-neutral-800 dark:text-emerald-400'
+                ? 'border border-emerald-500/20 bg-emerald-500/15 font-bold text-emerald-700 shadow-xs dark:border-emerald-400/30 dark:bg-emerald-500/20 dark:text-emerald-300'
                 : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
             }`}
           >
@@ -220,9 +241,9 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
           </button>
           <button
             onClick={() => onFilterModeChange('delayed')}
-            className={`cursor-pointer rounded-lg px-2.5 py-1 font-medium transition-all ${
+            className={`cursor-pointer rounded-xl px-2.5 py-1.5 font-medium transition-all ${
               filterMode === 'delayed'
-                ? 'bg-white font-bold text-rose-600 shadow-xs dark:bg-neutral-800 dark:text-rose-400'
+                ? 'border border-rose-500/20 bg-rose-500/15 font-bold text-rose-700 shadow-xs dark:border-rose-400/30 dark:bg-rose-500/20 dark:text-rose-300'
                 : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
             }`}
           >
@@ -230,9 +251,9 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
           </button>
           <button
             onClick={() => onFilterModeChange('blocked')}
-            className={`cursor-pointer rounded-lg px-2.5 py-1 font-medium transition-all ${
+            className={`cursor-pointer rounded-xl px-2.5 py-1.5 font-medium transition-all ${
               filterMode === 'blocked'
-                ? 'bg-white font-bold text-amber-600 shadow-xs dark:bg-neutral-800 dark:text-amber-400'
+                ? 'border border-amber-500/20 bg-amber-500/15 font-bold text-amber-700 shadow-xs dark:border-amber-400/30 dark:bg-amber-500/20 dark:text-amber-300'
                 : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
             }`}
           >
@@ -245,7 +266,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
           <select
             value={selectedTag}
             onChange={(e) => setSelectedTag(e.target.value)}
-            className="w-full rounded-xl border border-neutral-200/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+            className="w-full rounded-2xl border border-neutral-200/80 bg-white/70 px-3.5 py-2.5 text-xs text-neutral-900 shadow-xs backdrop-blur-md transition-all focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-none dark:border-neutral-800/80 dark:bg-neutral-900/70 dark:text-neutral-100 dark:focus:bg-neutral-900"
           >
             <option value="all">모든 태그 (전체)</option>
             {allTags.map((tag) => (
@@ -261,7 +282,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
-            className="w-full rounded-xl border border-neutral-200/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+            className="w-full rounded-2xl border border-neutral-200/80 bg-white/70 px-3.5 py-2.5 text-xs text-neutral-900 shadow-xs backdrop-blur-md transition-all focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-none dark:border-neutral-800/80 dark:bg-neutral-900/70 dark:text-neutral-100 dark:focus:bg-neutral-900"
           >
             <option value="all">모든 우선순위</option>
             <option value="high">High (높음)</option>
@@ -272,9 +293,9 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
       </div>
 
       {/* Todo List Cards */}
-      <div className="mt-5 space-y-3.5">
+      <div className="relative z-10 mt-5 space-y-3.5">
         {filteredTodos.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-neutral-300/80 bg-neutral-50/40 p-10 text-center dark:border-neutral-700/80 dark:bg-neutral-900/40">
+          <div className="rounded-2xl border border-dashed border-neutral-300/80 bg-neutral-50/40 p-10 text-center backdrop-blur-sm dark:border-neutral-700/80 dark:bg-neutral-900/40">
             <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-200/60 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500">
               <AlertCircle className="h-6 w-6" />
             </div>
@@ -295,10 +316,10 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                 key={todo.id}
                 className={`group relative overflow-hidden rounded-2xl border p-4.5 transition-all duration-200 sm:p-5 ${
                   todo.status === 'completed'
-                    ? 'border-neutral-200/60 bg-neutral-50/50 opacity-75 backdrop-blur-sm dark:border-neutral-800/60 dark:bg-neutral-950/40'
+                    ? 'border-neutral-200/50 bg-neutral-50/40 opacity-75 backdrop-blur-xs hover:opacity-90 dark:border-neutral-800/50 dark:bg-neutral-950/30'
                     : isDelayed
-                      ? 'border-rose-300/90 bg-rose-50/40 shadow-sm backdrop-blur-md hover:border-rose-400 dark:border-rose-900/80 dark:bg-rose-950/20 dark:hover:border-rose-800'
-                      : 'border-neutral-200/80 bg-white/70 shadow-xs backdrop-blur-md hover:-translate-y-0.5 hover:border-indigo-300/80 hover:bg-white hover:shadow-md dark:border-neutral-800/80 dark:bg-neutral-900/70 dark:hover:border-indigo-800/80 dark:hover:bg-neutral-900'
+                      ? 'border-rose-300/80 bg-rose-50/40 shadow-sm backdrop-blur-md hover:-translate-y-0.5 hover:border-rose-400/80 hover:bg-rose-50/70 hover:shadow-md dark:border-rose-900/60 dark:bg-rose-950/20 dark:hover:border-rose-800/80 dark:hover:bg-rose-950/40'
+                      : 'border-white/80 bg-white/65 shadow-xs backdrop-blur-md hover:-translate-y-0.5 hover:border-emerald-300/80 hover:bg-white/85 hover:shadow-md dark:border-white/10 dark:bg-neutral-800/50 dark:hover:border-emerald-500/40 dark:hover:bg-neutral-800/80'
                 }`}
               >
                 {/* Status Indicator Left Strip for Delayed/Blocked */}
@@ -318,12 +339,12 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                       title={todo.status === 'completed' ? '진행 중으로 되돌리기 (T06-C12)' : '완료로 바꾸기 (T06-C11)'}
                     >
                       {todo.status === 'completed' ? (
-                        <div className="flex h-5.5 w-5.5 items-center justify-center rounded-lg bg-emerald-500 text-white shadow-xs dark:bg-emerald-600">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-xs">
                           <CheckSquare className="h-4 w-4 stroke-[2.5]" />
                         </div>
                       ) : (
-                        <div className="flex h-5.5 w-5.5 items-center justify-center rounded-lg border-2 border-neutral-300 bg-white text-transparent transition-colors hover:border-emerald-500 hover:text-emerald-500 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-emerald-400">
-                          <Square className="h-3.5 w-3.5" />
+                        <div className="flex h-6 w-6 items-center justify-center rounded-xl border-2 border-neutral-300 bg-white/80 text-transparent backdrop-blur-xs transition-colors hover:border-emerald-500 hover:text-emerald-500 dark:border-neutral-700 dark:bg-neutral-800/80 dark:hover:border-emerald-400">
+                          <Square className="h-4 w-4" />
                         </div>
                       )}
                     </button>
@@ -333,21 +354,21 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                       <div className="mb-2 flex flex-wrap items-center gap-1.5">
                         {/* Priority Badge (T06-C15) */}
                         <span
-                          className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase ${
+                          className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-bold tracking-wide uppercase backdrop-blur-xs ${
                             todo.priority === 'high'
-                              ? 'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/60 dark:text-rose-300'
+                              ? 'border-rose-300/40 bg-rose-500/15 text-rose-700 dark:border-rose-800/40 dark:bg-rose-950/50 dark:text-rose-300'
                               : todo.priority === 'medium'
-                                ? 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-300'
-                                : 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/60 dark:text-emerald-300'
+                                ? 'border-amber-300/40 bg-amber-500/15 text-amber-700 dark:border-amber-800/40 dark:bg-amber-950/50 dark:text-amber-300'
+                                : 'border-emerald-300/40 bg-emerald-500/15 text-emerald-700 dark:border-emerald-800/40 dark:bg-emerald-950/50 dark:text-emerald-300'
                           }`}
                         >
                           <span
                             className={`h-1.5 w-1.5 rounded-full ${
                               todo.priority === 'high'
-                                ? 'bg-rose-500'
+                                ? 'bg-rose-500 ring-1 ring-rose-300'
                                 : todo.priority === 'medium'
-                                  ? 'bg-amber-500'
-                                  : 'bg-emerald-500'
+                                  ? 'bg-amber-500 ring-1 ring-amber-300'
+                                  : 'bg-emerald-500 ring-1 ring-emerald-300'
                             }`}
                           />
                           {todo.priority}
@@ -355,7 +376,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
 
                         {/* Delayed Badge (T06-C30) */}
                         {isDelayed && (
-                          <span className="inline-flex items-center gap-1 rounded-md bg-rose-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-2xs">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-rose-600 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-2xs">
                             <span className="h-1.5 w-1.5 animate-ping rounded-full bg-white" />
                             마감 지연
                           </span>
@@ -363,7 +384,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
 
                         {/* Blocked Badge (T06-C31) */}
                         {isBlocked && (
-                          <span className="inline-flex items-center gap-1 rounded-md bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-2xs">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-2xs">
                             막힘 발생
                           </span>
                         )}
@@ -372,7 +393,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                         {todo.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="inline-flex items-center gap-1 rounded-md border border-neutral-200/80 bg-neutral-100/70 px-2 py-0.5 text-[10px] font-semibold text-neutral-600 dark:border-neutral-800 dark:bg-neutral-800/70 dark:text-neutral-400"
+                            className="inline-flex items-center gap-1 rounded-full border border-neutral-200/80 bg-neutral-100/70 px-2.5 py-0.5 text-[10px] font-semibold text-neutral-600 backdrop-blur-xs dark:border-neutral-800 dark:bg-neutral-800/70 dark:text-neutral-400"
                           >
                             <Tag className="h-2.5 w-2.5 opacity-60" />
                             {tag}
@@ -391,16 +412,16 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
 
                       {/* Metadata Row (Capsules) */}
                       <div className="mt-2.5 flex flex-wrap items-center gap-2 font-mono text-[11px] text-neutral-500 dark:text-neutral-400">
-                        <span className="inline-flex items-center gap-1 rounded-lg border border-neutral-200/70 bg-neutral-50/70 px-2.5 py-1 text-neutral-600 dark:border-neutral-800 dark:bg-neutral-950/50 dark:text-neutral-400">
+                        <span className="inline-flex items-center gap-1 rounded-xl border border-neutral-200/70 bg-neutral-50/70 px-2.5 py-1 text-neutral-600 backdrop-blur-xs dark:border-neutral-800 dark:bg-neutral-950/50 dark:text-neutral-400">
                           <Calendar className="h-3 w-3 text-neutral-400" />
                           마감: {todo.due_date}
                         </span>
-                        <span className="inline-flex items-center gap-1 rounded-lg border border-indigo-500/20 bg-indigo-50/50 px-2.5 py-1 text-indigo-700 dark:border-indigo-500/30 dark:bg-indigo-950/40 dark:text-indigo-300">
+                        <span className="inline-flex items-center gap-1 rounded-xl border border-indigo-500/20 bg-indigo-50/50 px-2.5 py-1 text-indigo-700 backdrop-blur-xs dark:border-indigo-500/30 dark:bg-indigo-950/40 dark:text-indigo-300">
                           <Clock className="h-3 w-3 text-indigo-500" />
                           예상: {formatMinutes(todo.estimated_minutes)} ({todo.estimated_minutes}분)
                         </span>
                         {actualTotalMin > 0 && (
-                          <span className="inline-flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-50/70 px-2.5 py-1 font-bold text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-950/40 dark:text-emerald-300">
+                          <span className="inline-flex items-center gap-1 rounded-xl border border-emerald-500/30 bg-emerald-50/70 px-2.5 py-1 font-bold text-emerald-700 backdrop-blur-xs dark:border-emerald-500/40 dark:bg-emerald-950/40 dark:text-emerald-300">
                             <Zap className="h-3 w-3 text-emerald-500" />
                             실제: {formatMinutes(actualTotalMin)}
                           </span>
@@ -414,7 +435,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     {/* 실행 기록 작성 버튼 (카드 3) */}
                     <button
                       onClick={() => setActiveExecTodo(todo)}
-                      className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2 text-xs font-bold text-emerald-700 shadow-2xs transition-all hover:bg-emerald-500/20 dark:border-emerald-500/40 dark:bg-emerald-500/15 dark:text-emerald-300 dark:hover:bg-emerald-500/25"
+                      className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2 text-xs font-bold text-emerald-700 shadow-2xs backdrop-blur-xs transition-all hover:bg-emerald-500/20 dark:border-emerald-500/40 dark:bg-emerald-500/15 dark:text-emerald-300 dark:hover:bg-emerald-500/25"
                       title="실제 시작/종료 시각 및 막힌 이유 기록"
                     >
                       <Play className="h-3.5 w-3.5 fill-emerald-600 text-emerald-600 dark:fill-emerald-400 dark:text-emerald-400" />
@@ -425,7 +446,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     {todo.status === 'completed' ? (
                       <button
                         onClick={() => onRevertTodo(todo.id)}
-                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-500 shadow-2xs transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white/80 text-neutral-500 shadow-2xs backdrop-blur-xs transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900/80 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                         title="진행 중으로 되돌리기 (T06-C12)"
                       >
                         <RotateCcw className="h-4 w-4" />
@@ -433,7 +454,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     ) : (
                       <button
                         onClick={() => onCompleteTodo(todo.id)}
-                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-50/80 text-emerald-600 shadow-2xs transition-colors hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-950/50 dark:text-emerald-400 dark:hover:bg-emerald-900/50"
+                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-50/80 text-emerald-600 shadow-2xs backdrop-blur-xs transition-colors hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-950/50 dark:text-emerald-400 dark:hover:bg-emerald-900/50"
                         title="완료로 변경 (T06-C11)"
                       >
                         <CheckSquare className="h-4 w-4" />
@@ -443,7 +464,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     {/* 수정 버튼 (T06-C10) */}
                     <button
                       onClick={() => setEditingTodo(todo)}
-                      className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-500 shadow-2xs transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                      className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white/80 text-neutral-500 shadow-2xs backdrop-blur-xs transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900/80 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                       title="할 일 수정 (T06-C10)"
                     >
                       <Edit2 className="h-4 w-4" />
@@ -452,7 +473,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     {/* 삭제 버튼 (T06-C13) */}
                     <button
                       onClick={() => onDeleteTodo(todo.id)}
-                      className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-rose-500 shadow-2xs transition-colors hover:bg-rose-50 hover:text-rose-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-rose-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
+                      className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white/80 text-rose-500 shadow-2xs backdrop-blur-xs transition-colors hover:bg-rose-50 hover:text-rose-700 dark:border-neutral-800 dark:bg-neutral-900/80 dark:text-rose-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
                       title="할 일 삭제 (T06-C13)"
                     >
                       <Trash2 className="h-4 w-4" />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { PlusCircle, X, Sparkles } from 'lucide-react';
+import { PlusCircle, X, Sparkles, Loader2, Database, CheckCircle2, ShieldCheck } from 'lucide-react';
 import type { Plan, Priority } from '../types/pds.ts';
 import { getSeoulTodayString } from '../utils/dateUtils.ts';
 
@@ -11,6 +11,8 @@ interface NewPlanModalProps {
   prefilledNextActionNote?: string;
   onClearPrefilledNote?: () => void;
 }
+
+type SubmitStep = 'idle' | 'validating' | 'saving' | 'syncing' | 'completed';
 
 export const NewPlanModal: React.FC<NewPlanModalProps> = ({
   isOpen,
@@ -26,6 +28,11 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
   const [successCriteria, setSuccessCriteria] = useState('');
   const [estimatedMinutes, setEstimatedMinutes] = useState(180);
 
+  // 로딩 프로세스바 상태
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitProgress, setSubmitProgress] = useState(0);
+  const [submitStep, setSubmitStep] = useState<SubmitStep>('idle');
+
   // Check if there is prefilled note from See (T06-C33)
   useEffect(() => {
     if (prefilledNextActionNote) {
@@ -40,34 +47,112 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
 
   if (!isOpen) return null;
 
+  const getStepMessage = () => {
+    switch (submitStep) {
+      case 'validating':
+        return {
+          title: '1단계: 계획 속성 검증 중',
+          desc: '기간, 우선순위, 성공기준, 예상 시간 유효성을 확인하고 있습니다...',
+          icon: <ShieldCheck className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />,
+        };
+      case 'saving':
+        return {
+          title: '2단계: DB 및 스토리지 영속화 중',
+          desc: 'PostgreSQL DB와 로컬 스토어에 계획 레코드를 안전하게 저장하고 있습니다...',
+          icon: <Database className="h-4 w-4 text-violet-600 dark:text-violet-400" />,
+        };
+      case 'syncing':
+        return {
+          title: '3단계: 대시보드 뷰 동기화 중',
+          desc: '새 계획을 활성화하고 화면 데이터를 갱신하고 있습니다...',
+          icon: <Sparkles className="h-4 w-4 text-amber-500 dark:text-amber-400" />,
+        };
+      case 'completed':
+        return {
+          title: '등록 완료!',
+          desc: '새 계획이 성공적으로 생성되었습니다.',
+          icon: <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />,
+        };
+      default:
+        return null;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) return;
-    await onCreatePlan({
-      title: title.trim(),
-      start_date: startDate || getSeoulTodayString(),
-      end_date: endDate || getSeoulTodayString(),
-      priority,
-      success_criteria: successCriteria.trim() || '목표 달성',
-      estimated_minutes: Number(estimatedMinutes) || 60,
-    });
-    setTitle('');
-    setSuccessCriteria('');
-    onClose();
-    if (onClearPrefilledNote) onClearPrefilledNote();
+    if (!title.trim() || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitProgress(15);
+    setSubmitStep('validating');
+
+    try {
+      // 1단계: 계획 데이터 유효성 검증 시각화
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      setSubmitProgress(45);
+      setSubmitStep('saving');
+
+      // 2단계: 실제 DB / 스토어 생성 호출
+      const planPromise = onCreatePlan({
+        title: title.trim(),
+        start_date: startDate || getSeoulTodayString(),
+        end_date: endDate || getSeoulTodayString(),
+        priority,
+        success_criteria: successCriteria.trim() || '목표 달성',
+        estimated_minutes: Number(estimatedMinutes) || 60,
+      });
+
+      await Promise.all([planPromise, new Promise((resolve) => setTimeout(resolve, 300))]);
+
+      // 3단계: 화면 동기화 시각화
+      setSubmitProgress(85);
+      setSubmitStep('syncing');
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      // 4단계: 완료 피드백
+      setSubmitProgress(100);
+      setSubmitStep('completed');
+      await new Promise((resolve) => setTimeout(resolve, 150));
+
+      setTitle('');
+      setSuccessCriteria('');
+      onClose();
+      if (onClearPrefilledNote) onClearPrefilledNote();
+    } catch (error) {
+      console.error('계획 등록 중 오류 발생:', error);
+    } finally {
+      setIsSubmitting(false);
+      setSubmitProgress(0);
+      setSubmitStep('idle');
+    }
   };
+
+  const stepInfo = getStepMessage();
 
   return createPortal(
     <div
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget && !isSubmitting) onClose();
       }}
-      className="animate-in fade-in fixed inset-0 z-100 flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
+      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
     >
-      <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] dark:border-neutral-800/90 dark:bg-neutral-900 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
+        {/* 최상단 프로그레스 바 (등록 진행 시 활성화) */}
+        {isSubmitting ? (
+          <div
+            className="absolute top-0 left-0 z-20 h-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-600 shadow-sm shadow-indigo-500/50 transition-all duration-300 ease-out"
+            style={{ width: `${submitProgress}%` }}
+          />
+        ) : (
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+            aria-hidden="true"
+          />
+        )}
+
         {/* Header */}
-        <div className="relative flex items-center justify-between border-b border-neutral-200 px-6 py-5 dark:border-neutral-800">
-          <div className="flex items-center gap-3">
+        <div className="relative flex items-center justify-between border-b border-neutral-200/80 px-6 py-5 dark:border-neutral-800/80">
+          <div className="flex items-center gap-3.5">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-50 text-indigo-600 dark:border-indigo-400/30 dark:bg-indigo-950/50 dark:text-indigo-400">
               <PlusCircle className="h-5 w-5" />
             </div>
@@ -80,19 +165,45 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                   Plan
                 </span>
               </div>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                 돌아보기(See) 피드백을 연계하여 새로운 목표를 수립합니다.
               </p>
             </div>
           </div>
           <button
             type="button"
+            disabled={isSubmitting}
             onClick={onClose}
-            className="hover-lift flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+            className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-40 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
           >
             <X className="h-4.5 w-4.5" />
           </button>
         </div>
+
+        {/* 등록 진행 중일 때 표시되는 로딩 프로세스 바 배너 */}
+        {isSubmitting && stepInfo && (
+          <div className="animate-in fade-in slide-in-from-top-2 border-b border-indigo-500/20 bg-gradient-to-r from-indigo-50/90 via-violet-50/80 to-purple-50/90 px-6 py-3 duration-200 dark:from-indigo-950/50 dark:via-violet-950/40 dark:to-purple-950/50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-white shadow-2xs dark:bg-neutral-900">
+                  {stepInfo.icon}
+                </div>
+                <span className="text-xs font-bold text-indigo-900 dark:text-indigo-200">{stepInfo.title}</span>
+              </div>
+              <span className="font-mono text-xs font-extrabold text-indigo-600 dark:text-indigo-400">
+                {submitProgress}%
+              </span>
+            </div>
+            <p className="mt-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300">{stepInfo.desc}</p>
+            {/* 프로그레스 트랙 및 인디케이터 */}
+            <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-indigo-200/70 dark:bg-indigo-950">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-600 shadow-xs shadow-indigo-500/50 transition-all duration-300 ease-out"
+                style={{ width: `${submitProgress}%` }}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="custom-scrollbar relative flex flex-col overflow-y-auto">
@@ -103,10 +214,11 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
               </label>
               <input
                 type="text"
+                disabled={isSubmitting}
                 placeholder="예: 다음 스프린트 목표 및 성능 최적화"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
+                className="w-full rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-3.5 py-2.5 text-xs text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:text-neutral-100 dark:focus:bg-neutral-900"
                 required
               />
             </div>
@@ -118,9 +230,10 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                 </label>
                 <input
                   type="date"
+                  disabled={isSubmitting}
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
+                  className="w-full rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-3 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:text-neutral-100 dark:focus:bg-neutral-900"
                   required
                 />
               </div>
@@ -130,9 +243,10 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                 </label>
                 <input
                   type="date"
+                  disabled={isSubmitting}
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
+                  className="w-full rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-3 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:text-neutral-100 dark:focus:bg-neutral-900"
                   required
                 />
               </div>
@@ -143,41 +257,48 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                 <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                   우선순위 (T06-C05)
                 </label>
-                <div className="grid grid-cols-3 gap-1 rounded-xl border border-neutral-200 bg-neutral-100 p-1 dark:border-neutral-800 dark:bg-neutral-950">
+                <div className="grid grid-cols-3 gap-1 rounded-2xl border border-neutral-200/80 bg-neutral-100/80 p-1 dark:border-neutral-800/80 dark:bg-neutral-950/80">
                   <button
                     type="button"
+                    disabled={isSubmitting}
                     onClick={() => setPriority('high')}
-                    className={`flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-semibold transition-all ${
+                    className={`hover-lift active-press flex items-center justify-center gap-1.5 rounded-xl py-1.5 text-xs font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-60 ${
                       priority === 'high'
                         ? 'bg-rose-500 text-white shadow-xs'
                         : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
                     }`}
                   >
-                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    <span className={`h-1.5 w-1.5 rounded-full ${priority === 'high' ? 'bg-white' : 'bg-rose-500'}`} />
                     높음
                   </button>
                   <button
                     type="button"
+                    disabled={isSubmitting}
                     onClick={() => setPriority('medium')}
-                    className={`flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-semibold transition-all ${
+                    className={`hover-lift active-press flex items-center justify-center gap-1.5 rounded-xl py-1.5 text-xs font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-60 ${
                       priority === 'medium'
                         ? 'bg-amber-500 text-white shadow-xs'
                         : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
                     }`}
                   >
-                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${priority === 'medium' ? 'bg-white' : 'bg-amber-500'}`}
+                    />
                     보통
                   </button>
                   <button
                     type="button"
+                    disabled={isSubmitting}
                     onClick={() => setPriority('low')}
-                    className={`flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-semibold transition-all ${
+                    className={`hover-lift active-press flex items-center justify-center gap-1.5 rounded-xl py-1.5 text-xs font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-60 ${
                       priority === 'low'
-                        ? 'bg-sky-500 text-white shadow-xs'
+                        ? 'bg-emerald-500 text-white shadow-xs'
                         : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
                     }`}
                   >
-                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${priority === 'low' ? 'bg-white' : 'bg-emerald-500'}`}
+                    />
                     낮음
                   </button>
                 </div>
@@ -188,10 +309,11 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                 </label>
                 <input
                   type="number"
+                  disabled={isSubmitting}
                   min="1"
                   value={estimatedMinutes}
                   onChange={(e) => setEstimatedMinutes(Number(e.target.value))}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
+                  className="w-full rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-3.5 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:text-neutral-100 dark:focus:bg-neutral-900"
                   required
                 />
               </div>
@@ -201,35 +323,45 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
               <label className="mb-1.5 flex items-center justify-between text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                 <span>성공 기준 (T06-C06 / 피드백 연계 T06-C33)</span>
                 {prefilledNextActionNote && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-indigo-500/30 bg-indigo-50 px-2 py-0.5 text-[10px] font-bold text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-indigo-500/30 bg-indigo-50 px-2.5 py-0.5 text-[10px] font-bold text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300">
                     <Sparkles className="h-2.5 w-2.5" /> 피드백 자동 승계됨
                   </span>
                 )}
               </label>
               <textarea
                 rows={3}
+                disabled={isSubmitting}
                 value={successCriteria}
                 onChange={(e) => setSuccessCriteria(e.target.value)}
                 placeholder="달성 목표 및 돌아보기에서 도출된 개선점을 입력하세요"
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
+                className="w-full rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-3.5 py-2.5 text-xs text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:text-neutral-100 dark:focus:bg-neutral-900"
                 required
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-2.5 border-t border-neutral-200 px-6 py-4 dark:border-neutral-800">
+          <div className="flex items-center justify-end gap-2.5 border-t border-neutral-200/80 px-6 py-4 dark:border-neutral-800/80">
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={onClose}
-              className="hover-lift cursor-pointer rounded-xl border border-neutral-200 bg-neutral-100 px-4 py-2.5 text-xs font-semibold text-neutral-600 transition-all hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
+              className="hover-lift active-press cursor-pointer rounded-2xl border border-neutral-200/80 bg-neutral-100/80 px-4.5 py-2.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800/80 dark:bg-neutral-800/80 dark:text-neutral-300 dark:hover:bg-neutral-700"
             >
               취소
             </button>
             <button
               type="submit"
-              className="hover-lift cursor-pointer rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:from-indigo-500 hover:to-violet-500"
+              disabled={isSubmitting}
+              className="hover-lift active-press inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:from-indigo-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-75"
             >
-              새 계획 등록
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <span>계획 등록 중 ({submitProgress}%)</span>
+                </>
+              ) : (
+                <span>새 계획 등록</span>
+              )}
             </button>
           </div>
         </form>
