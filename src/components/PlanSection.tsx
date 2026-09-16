@@ -57,7 +57,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
           aria-hidden="true"
         />
         <div className="relative z-10 mx-auto max-w-md space-y-4 py-6">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/20 to-violet-500/20 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:text-indigo-400">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-indigo-500/20 bg-linear-to-br from-indigo-500/20 to-violet-500/20 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:text-indigo-400">
             <Target className="h-7 w-7" />
           </div>
           <div className="space-y-1.5">
@@ -70,7 +70,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
           </div>
           <button
             onClick={() => setIsNewPlanModalOpen(true)}
-            className="hover-lift active-press inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-700 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:from-indigo-500 hover:to-indigo-600"
+            className="hover-lift active-press inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-linear-to-r from-indigo-600 to-indigo-700 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:from-indigo-500 hover:to-indigo-600"
           >
             <PlusCircle className="h-4 w-4" />
             <span>새 계획 세우기</span>
@@ -125,7 +125,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
     >
       {/* 상단 은은한 림라이트 (유리 반사 효과) */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
         aria-hidden="true"
       />
 
@@ -140,9 +140,9 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
       />
 
       {/* Section Header */}
-      <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-neutral-200/70 pb-6 sm:flex-row sm:items-center dark:border-white/[0.08]">
+      <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-neutral-200/70 pb-6 sm:flex-row sm:items-center dark:border-white/8">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/20 via-indigo-600/10 to-violet-500/15 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:text-indigo-400">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-indigo-500/20 bg-linear-to-br from-indigo-500/20 via-indigo-600/10 to-violet-500/15 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:text-indigo-400">
             <Target className="h-6 w-6" />
           </div>
           <div>
@@ -164,14 +164,14 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
         <div className="flex flex-wrap items-center gap-2 sm:self-center">
           <button
             onClick={() => setIsRevisionModalOpen(true)}
-            className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-neutral-200/80 bg-white/60 px-3.5 py-2 text-xs font-semibold text-neutral-700 shadow-2xs backdrop-blur-md transition-all hover:bg-white hover:text-neutral-900 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-200 dark:hover:bg-white/[0.08] dark:hover:text-neutral-100"
+            className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-neutral-200/80 bg-white/60 px-3.5 py-2 text-xs font-semibold text-neutral-700 shadow-2xs backdrop-blur-md transition-all hover:bg-white hover:text-neutral-900 dark:border-white/8 dark:bg-white/4 dark:text-neutral-200 dark:hover:bg-white/8 dark:hover:text-neutral-100"
           >
             <History className="h-3.5 w-3.5 text-indigo-500" />
             <span>수정 이력 ({revisions.length}건)</span>
           </button>
           <button
             onClick={() => setIsEditModalOpen(true)}
-            className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-indigo-500/30 bg-gradient-to-r from-indigo-600 to-indigo-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm shadow-indigo-600/20 transition-all hover:from-indigo-500 hover:to-indigo-600"
+            className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-indigo-500/30 bg-linear-to-r from-indigo-600 to-indigo-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm shadow-indigo-600/20 transition-all hover:from-indigo-500 hover:to-indigo-600"
           >
             <Edit3 className="h-3.5 w-3.5" />
             <span>계획 수정</span>
@@ -190,7 +190,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
       {/* Plan 4 Essential Attributes Grid (T06-C04 ~ T06-C07) */}
       <div className="relative z-10 mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* T06-C04: 기간 저장 */}
-        <div className="hover-lift group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-xl transition-all duration-200 hover:border-indigo-400/50 hover:bg-white/85 hover:shadow-md hover:shadow-indigo-500/5 dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:border-indigo-400/40 dark:hover:bg-white/[0.07]">
+        <div className="hover-lift group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-xl transition-all duration-200 hover:border-indigo-400/50 hover:bg-white/85 hover:shadow-md hover:shadow-indigo-500/5 dark:border-white/8 dark:bg-white/3 dark:hover:border-indigo-400/40 dark:hover:bg-white/[0.07]">
           <div>
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-semibold text-neutral-600 dark:text-neutral-400">
@@ -213,7 +213,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
 
         {/* T06-C05: 우선순위 저장 */}
         <div
-          className={`hover-lift group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-xl transition-all duration-200 hover:bg-white/85 hover:shadow-md dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:bg-white/[0.07] ${priorityStyle.cardBorder}`}
+          className={`hover-lift group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-xl transition-all duration-200 hover:bg-white/85 hover:shadow-md dark:border-white/8 dark:bg-white/3 dark:hover:bg-white/[0.07] ${priorityStyle.cardBorder}`}
         >
           <div>
             <div className="mb-2 flex items-center justify-between">
@@ -236,7 +236,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
         </div>
 
         {/* T06-C07: 예상 시간 저장 */}
-        <div className="hover-lift group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-xl transition-all duration-200 hover:border-violet-400/50 hover:bg-white/85 hover:shadow-md hover:shadow-violet-500/5 dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:border-violet-400/40 dark:hover:bg-white/[0.07]">
+        <div className="hover-lift group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-xl transition-all duration-200 hover:border-violet-400/50 hover:bg-white/85 hover:shadow-md hover:shadow-violet-500/5 dark:border-white/8 dark:bg-white/3 dark:hover:border-violet-400/40 dark:hover:bg-white/[0.07]">
           <div>
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-semibold text-neutral-600 dark:text-neutral-400">
@@ -258,7 +258,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
         </div>
 
         {/* T06-C06: 성공 기준 저장 */}
-        <div className="hover-lift group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-xl transition-all duration-200 hover:border-amber-400/50 hover:bg-white/85 hover:shadow-md hover:shadow-amber-500/5 dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:border-amber-400/40 dark:hover:bg-white/[0.07]">
+        <div className="hover-lift group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-xl transition-all duration-200 hover:border-amber-400/50 hover:bg-white/85 hover:shadow-md hover:shadow-amber-500/5 dark:border-white/8 dark:bg-white/3 dark:hover:border-amber-400/40 dark:hover:bg-white/[0.07]">
           <div>
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-semibold text-neutral-600 dark:text-neutral-400">

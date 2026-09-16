@@ -48,18 +48,18 @@ export const LoadingProcessModal: React.FC<LoadingProcessModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="loading-process-title"
-      className="animate-in fade-in fixed inset-0 z-[120] flex items-center justify-center bg-neutral-950/70 p-4 duration-200 sm:p-6"
+      className="animate-in fade-in fixed inset-0 z-120 flex items-center justify-center bg-neutral-950/70 p-4 duration-200 sm:p-6"
     >
       <div className="relative flex w-full max-w-md flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white p-6 shadow-2xl transition-all duration-300 dark:border-neutral-800/90 dark:bg-neutral-900">
         {/* 상단 엣지 프로그레스 바 */}
         <div
-          className={`absolute top-0 left-0 z-20 h-1.5 bg-gradient-to-r shadow-xs transition-all duration-300 ease-out ${gradientBar}`}
+          className={`absolute top-0 left-0 z-20 h-1.5 bg-linear-to-r shadow-xs transition-all duration-300 ease-out ${gradientBar}`}
           style={{ width: `${progress}%` }}
         />
 
         {/* 상단 림라이트 */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
           aria-hidden="true"
         />
 
@@ -98,7 +98,7 @@ export const LoadingProcessModal: React.FC<LoadingProcessModalProps> = ({
             </div>
             <div className={`mt-2 h-2 w-full overflow-hidden rounded-full ${trackBg}`}>
               <div
-                className={`h-full rounded-full bg-gradient-to-r shadow-xs transition-all duration-300 ease-out ${gradientBar}`}
+                className={`h-full rounded-full bg-linear-to-r shadow-xs transition-all duration-300 ease-out ${gradientBar}`}
                 style={{ width: `${progress}%` }}
               />
             </div>

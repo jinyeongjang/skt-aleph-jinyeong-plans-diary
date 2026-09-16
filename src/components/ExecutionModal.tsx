@@ -119,12 +119,12 @@ export const ExecutionModal: React.FC<ExecutionModalProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
+      className="animate-in fade-in fixed inset-0 z-100 flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
     >
       <div className="relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] dark:border-neutral-800/90 dark:bg-neutral-900 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
         {/* Top Rimlight */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
           aria-hidden="true"
         />
 
@@ -306,7 +306,7 @@ export const ExecutionModal: React.FC<ExecutionModalProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/25 transition-all hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50"
+                  className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-2xl bg-linear-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/25 transition-all hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50"
                 >
                   <CheckCircle className="h-3.5 w-3.5" />
                   실행 기록 및 완료

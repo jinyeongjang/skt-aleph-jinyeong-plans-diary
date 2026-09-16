@@ -119,12 +119,12 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
           onClick={(e) => {
             if (e.target === e.currentTarget && !isSubmitting) onClose();
           }}
-          className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
+          className="animate-in fade-in fixed inset-0 z-100 flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
         >
           <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] dark:border-neutral-800/90 dark:bg-neutral-900 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
             {/* Top Rimlight */}
             <div
-              className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
               aria-hidden="true"
             />
 
@@ -307,7 +307,7 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="hover-lift active-press inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:from-indigo-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-75"
+                  className="hover-lift active-press inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-linear-to-r from-indigo-600 to-violet-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:from-indigo-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-75"
                 >
                   새 계획 등록
                 </button>

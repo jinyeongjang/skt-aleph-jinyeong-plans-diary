@@ -118,7 +118,7 @@ export const FixedTestsSection: React.FC = () => {
     >
       {/* 상단 은은한 림라이트 (유리 반사 효과) */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
         aria-hidden="true"
       />
 
@@ -133,9 +133,9 @@ export const FixedTestsSection: React.FC = () => {
       />
 
       {/* Header */}
-      <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-neutral-200/70 pb-6 md:flex-row md:items-center dark:border-white/[0.08]">
+      <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-neutral-200/70 pb-6 md:flex-row md:items-center dark:border-white/8">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/20 via-indigo-600/10 to-blue-500/15 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:text-indigo-400">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-indigo-500/20 bg-linear-to-br from-indigo-500/20 via-indigo-600/10 to-blue-500/15 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:text-indigo-400">
             <ShieldCheck className="h-6 w-6" />
           </div>
           <div>
@@ -163,7 +163,7 @@ export const FixedTestsSection: React.FC = () => {
           <button
             onClick={handleRunAllLive}
             disabled={isRunning}
-            className="hover-lift active-press inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:from-indigo-500 hover:to-blue-500 disabled:opacity-60"
+            className="hover-lift active-press inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-linear-to-r from-indigo-600 to-blue-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:from-indigo-500 hover:to-blue-500 disabled:opacity-60"
           >
             {isRunning ? (
               <>
@@ -198,7 +198,7 @@ export const FixedTestsSection: React.FC = () => {
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-200/80 dark:bg-neutral-800">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-indigo-600 to-blue-500 transition-all duration-200"
+              className="h-full rounded-full bg-linear-to-r from-indigo-600 to-blue-500 transition-all duration-200"
               style={{ width: `${progress.percent}%` }}
             />
           </div>
@@ -308,7 +308,7 @@ export const FixedTestsSection: React.FC = () => {
 
               {/* Accordion Detail */}
               {isExpanded && (
-                <div className="space-y-3 border-t border-neutral-100/80 px-4.5 pt-3 pb-4.5 text-xs dark:border-white/[0.06]">
+                <div className="space-y-3 border-t border-neutral-100/80 px-4.5 pt-3 pb-4.5 text-xs dark:border-white/6">
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                     <div className="rounded-xl border border-neutral-200/60 bg-white/60 p-3 shadow-2xs backdrop-blur-xs dark:border-neutral-800/60 dark:bg-neutral-900/60">
                       <strong className="mb-1 block text-neutral-700 dark:text-neutral-300">입력 조건 (T06-C03)</strong>

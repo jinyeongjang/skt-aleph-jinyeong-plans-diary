@@ -11,7 +11,7 @@ export const NoticeBanner: React.FC<NoticeBannerProps> = ({ onOpenDbGuide }) => 
     <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-amber-500/10 p-3.5 shadow-xs backdrop-blur-xl dark:border-amber-400/25 dark:bg-amber-500/10">
       {/* Top Rim Light */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-amber-400/40 to-transparent"
         aria-hidden="true"
       />
 
@@ -45,7 +45,7 @@ export const NoticeBanner: React.FC<NoticeBannerProps> = ({ onOpenDbGuide }) => 
             </button>
           )}
 
-          <span className="hidden items-center gap-1 rounded-full border border-neutral-200/80 bg-white/60 px-2.5 py-1 font-mono text-[11px] text-neutral-600 shadow-2xs backdrop-blur-xs md:inline-flex dark:border-white/10 dark:bg-white/[0.04] dark:text-neutral-300">
+          <span className="hidden items-center gap-1 rounded-full border border-neutral-200/80 bg-white/60 px-2.5 py-1 font-mono text-[11px] text-neutral-600 shadow-2xs backdrop-blur-xs md:inline-flex dark:border-white/10 dark:bg-white/4 dark:text-neutral-300">
             <ShieldCheck className="h-3.5 w-3.5 text-neutral-500" />
             무로그인 검증 지원
           </span>

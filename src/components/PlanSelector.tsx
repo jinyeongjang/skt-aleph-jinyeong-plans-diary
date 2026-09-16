@@ -39,7 +39,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
         <div className="relative flex items-center justify-between overflow-hidden rounded-3xl border border-white/80 bg-white/75 px-5 py-4 shadow-[0_8px_32px_0_rgba(31,38,135,0.06)] backdrop-blur-2xl transition-all duration-300 dark:border-white/10 dark:bg-neutral-900/70 dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
           {/* 상단 림라이트 */}
           <div
-            className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
             aria-hidden="true"
           />
 
@@ -54,7 +54,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
           />
 
           <div className="flex items-center gap-3">
-            <div className="flex h-8.5 w-8.5 items-center justify-center rounded-xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/15 to-violet-500/15 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:from-indigo-500/20 dark:to-violet-500/20 dark:text-indigo-300">
+            <div className="flex h-8.5 w-8.5 items-center justify-center rounded-xl border border-indigo-500/20 bg-linear-to-br from-indigo-500/15 to-violet-500/15 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:from-indigo-500/20 dark:to-violet-500/20 dark:text-indigo-300">
               <Layers className="h-4 w-4" />
             </div>
             <span className="text-sm font-bold tracking-tight text-neutral-800 dark:text-neutral-100">
@@ -149,7 +149,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
         <div className="relative z-10 mb-3.5 flex flex-wrap items-center justify-between gap-2.5 px-0.5">
           <div className="flex items-center gap-2.5">
             {/* 세련된 글래스 아이콘 배지 */}
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/15 to-violet-500/15 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:from-indigo-500/20 dark:to-violet-500/20 dark:text-indigo-300">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-indigo-500/20 bg-linear-to-br from-indigo-500/15 to-violet-500/15 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:from-indigo-500/20 dark:to-violet-500/20 dark:text-indigo-300">
               <Layers className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2">
@@ -192,7 +192,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
               <button
                 onClick={onOpenNewPlan}
                 type="button"
-                className="hover-lift active-press group inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-indigo-500/30 bg-gradient-to-r from-indigo-500/10 via-violet-500/10 to-indigo-500/10 px-3 py-1.5 text-xs font-semibold text-indigo-600 shadow-sm backdrop-blur-md transition-all hover:border-indigo-500/50 hover:from-indigo-500/20 hover:to-violet-500/20 hover:text-indigo-700 dark:border-indigo-400/40 dark:from-indigo-500/15 dark:to-violet-500/15 dark:text-indigo-300 dark:hover:border-indigo-400/60 dark:hover:text-indigo-200"
+                className="hover-lift active-press group inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-indigo-500/30 bg-linear-to-r from-indigo-500/10 via-violet-500/10 to-indigo-500/10 px-3 py-1.5 text-xs font-semibold text-indigo-600 shadow-sm backdrop-blur-md transition-all hover:border-indigo-500/50 hover:from-indigo-500/20 hover:to-violet-500/20 hover:text-indigo-700 dark:border-indigo-400/40 dark:from-indigo-500/15 dark:to-violet-500/15 dark:text-indigo-300 dark:hover:border-indigo-400/60 dark:hover:text-indigo-200"
               >
                 <Plus className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-90" />
                 <span>새 계획 추가</span>
@@ -212,14 +212,14 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
                 type="button"
                 className={`hover-lift active-press group relative flex w-64 shrink-0 cursor-pointer flex-col justify-between rounded-2xl p-3.5 text-left transition-all duration-300 sm:w-72 ${
                   isSelected
-                    ? 'border border-indigo-300/50 bg-gradient-to-br from-indigo-600/95 via-indigo-600 to-violet-700/95 text-white shadow-lg ring-2 shadow-indigo-600/25 ring-indigo-400/40 backdrop-blur-2xl dark:border-indigo-400/40 dark:shadow-indigo-950/50'
-                    : 'border border-neutral-200/80 bg-white/50 text-neutral-800 shadow-xs backdrop-blur-xl hover:border-indigo-400/50 hover:bg-white/85 hover:text-neutral-900 hover:shadow-md hover:shadow-indigo-500/5 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-neutral-200 dark:hover:border-indigo-400/40 dark:hover:bg-white/[0.07] dark:hover:text-neutral-100'
+                    ? 'border border-indigo-300/50 bg-linear-to-br from-indigo-600/95 via-indigo-600 to-violet-700/95 text-white shadow-lg ring-2 shadow-indigo-600/25 ring-indigo-400/40 backdrop-blur-2xl dark:border-indigo-400/40 dark:shadow-indigo-950/50'
+                    : 'border border-neutral-200/80 bg-white/50 text-neutral-800 shadow-xs backdrop-blur-xl hover:border-indigo-400/50 hover:bg-white/85 hover:text-neutral-900 hover:shadow-md hover:shadow-indigo-500/5 dark:border-white/8 dark:bg-white/3 dark:text-neutral-200 dark:hover:border-indigo-400/40 dark:hover:bg-white/[0.07] dark:hover:text-neutral-100'
                 }`}
               >
                 {/* 상단 은은한 림라이트 (유리 반사 효과) */}
                 {isSelected && (
                   <div
-                    className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent"
+                    className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/50 to-transparent"
                     aria-hidden="true"
                   />
                 )}
@@ -257,7 +257,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
                     className={`mt-2 flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] transition-colors ${
                       isSelected
                         ? 'border border-white/10 bg-black/15 text-indigo-100/90'
-                        : 'border border-neutral-200/50 bg-neutral-100/60 text-neutral-500 dark:border-white/[0.04] dark:bg-white/[0.03] dark:text-neutral-400'
+                        : 'border border-neutral-200/50 bg-neutral-100/60 text-neutral-500 dark:border-white/4 dark:bg-white/3 dark:text-neutral-400'
                     }`}
                   >
                     <Target
@@ -273,7 +273,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
                     className={`flex items-center gap-1 rounded-md px-2 py-0.5 font-medium ${
                       isSelected
                         ? 'border border-white/15 bg-white/15 text-white/95 backdrop-blur-xs'
-                        : 'border border-neutral-200/60 bg-neutral-100/80 text-neutral-600 dark:border-white/[0.06] dark:bg-white/[0.05] dark:text-neutral-300'
+                        : 'border border-neutral-200/60 bg-neutral-100/80 text-neutral-600 dark:border-white/6 dark:bg-white/5 dark:text-neutral-300'
                     }`}
                   >
                     <Calendar className="h-3 w-3 shrink-0 opacity-80" />
@@ -283,7 +283,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
                     className={`flex items-center gap-1 rounded-md px-2 py-0.5 font-medium ${
                       isSelected
                         ? 'border border-white/15 bg-white/15 text-white/95 backdrop-blur-xs'
-                        : 'border border-neutral-200/60 bg-neutral-100/80 text-neutral-600 dark:border-white/[0.06] dark:bg-white/[0.05] dark:text-neutral-300'
+                        : 'border border-neutral-200/60 bg-neutral-100/80 text-neutral-600 dark:border-white/6 dark:bg-white/5 dark:text-neutral-300'
                     }`}
                   >
                     <Clock className="h-3 w-3 shrink-0 opacity-80" />
@@ -297,7 +297,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
 
         {/* 현재 활성화된 계획 퀵 서브 글래스 바 */}
         {activePlan && (
-          <div className="relative z-10 mt-3.5 flex flex-wrap items-center justify-between gap-2.5 rounded-2xl border border-indigo-500/15 bg-gradient-to-r from-indigo-500/[0.07] via-violet-500/[0.05] to-transparent px-3.5 py-2 text-xs backdrop-blur-md dark:border-indigo-400/20 dark:from-indigo-500/[0.12] dark:via-violet-500/[0.08]">
+          <div className="relative z-10 mt-3.5 flex flex-wrap items-center justify-between gap-2.5 rounded-2xl border border-indigo-500/15 bg-linear-to-r from-indigo-500/[0.07] via-violet-500/5 to-transparent px-3.5 py-2 text-xs backdrop-blur-md dark:border-indigo-400/20 dark:from-indigo-500/12 dark:via-violet-500/8">
             <div className="flex min-w-0 flex-1 items-center gap-2">
               <CheckCircle2 className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
               <div className="min-w-0 flex-1">

@@ -19,12 +19,12 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
+      className="animate-in fade-in fixed inset-0 z-100 flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
     >
       <div className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] dark:border-neutral-800/90 dark:bg-neutral-900 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
         {/* Top Rimlight */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
           aria-hidden="true"
         />
 
@@ -62,7 +62,7 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
           <div className="rounded-2xl border border-indigo-500/30 bg-indigo-50/70 p-5 shadow-xs dark:border-indigo-400/30 dark:bg-indigo-950/40">
             <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-0.5 text-xs font-bold text-white shadow-xs">
+                <span className="rounded-full bg-linear-to-r from-indigo-600 to-violet-600 px-3 py-0.5 text-xs font-bold text-white shadow-xs">
                   현재 최신 계획 (Active)
                 </span>
                 <span className="font-mono text-xs text-neutral-500 dark:text-neutral-400">

@@ -130,7 +130,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
     >
       {/* 상단 은은한 림라이트 (유리 반사 효과) */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
         aria-hidden="true"
       />
 
@@ -145,9 +145,9 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
       />
 
       {/* Section Header */}
-      <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-neutral-200/70 pb-6 sm:flex-row sm:items-center dark:border-white/[0.08]">
+      <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-neutral-200/70 pb-6 sm:flex-row sm:items-center dark:border-white/8">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/20 via-emerald-600/10 to-teal-500/15 text-emerald-600 shadow-inner backdrop-blur-md dark:border-emerald-400/30 dark:text-emerald-400">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/20 bg-linear-to-br from-emerald-500/20 via-emerald-600/10 to-teal-500/15 text-emerald-600 shadow-inner backdrop-blur-md dark:border-emerald-400/30 dark:text-emerald-400">
             <CheckSquare className="h-6 w-6" />
           </div>
           <div>
@@ -170,7 +170,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
 
         <button
           onClick={() => setIsAddOpen(true)}
-          className="hover-lift active-press group inline-flex cursor-pointer items-center gap-2 self-start rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/25 transition-all hover:from-emerald-500 hover:to-teal-500 sm:self-auto"
+          className="hover-lift active-press group inline-flex cursor-pointer items-center gap-2 self-start rounded-2xl bg-linear-to-r from-emerald-600 to-teal-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/25 transition-all hover:from-emerald-500 hover:to-teal-500 sm:self-auto"
         >
           <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
           <span>할 일 추가 (T06-C09)</span>
@@ -342,8 +342,8 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                       aria-label={todo.status === 'completed' ? '할 일 완료 취소' : '할 일 완료'}
                     >
                       {todo.status === 'completed' ? (
-                        <div className="flex h-6.5 w-6.5 items-center justify-center rounded-xl border border-emerald-400/40 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/30 transition-all duration-200">
-                          <Check className="h-4 w-4 stroke-[3]" />
+                        <div className="flex h-6.5 w-6.5 items-center justify-center rounded-xl border border-emerald-400/40 bg-linear-to-br from-emerald-500 via-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/30 transition-all duration-200">
+                          <Check className="h-4 w-4 stroke-3" />
                         </div>
                       ) : (
                         <div className="flex h-6.5 w-6.5 items-center justify-center rounded-xl border-2 border-neutral-300/90 bg-white/90 shadow-2xs backdrop-blur-xs transition-all duration-200 group-hover/check:border-emerald-500 group-hover/check:bg-emerald-50/80 group-hover/check:shadow-sm dark:border-neutral-600 dark:bg-neutral-800/90 dark:group-hover/check:border-emerald-400 dark:group-hover/check:bg-emerald-950/50">
