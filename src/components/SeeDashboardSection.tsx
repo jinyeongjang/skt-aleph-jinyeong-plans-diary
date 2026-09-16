@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   PieChart,
   CheckCircle2,
@@ -32,6 +32,13 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
   const [nextActionNote, setNextActionNote] = useState(reviews.length > 0 ? reviews[0].next_action_note : '');
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setNextActionNote(reviews.length > 0 ? reviews[0].next_action_note : '');
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [reviews]);
 
   const handleTransferToNextPlan = async (e: React.FormEvent) => {
     e.preventDefault();

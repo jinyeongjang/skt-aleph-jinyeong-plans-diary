@@ -14,10 +14,6 @@ export const HeroBanner: React.FC = () => {
               className="h-full w-full rounded-2xl object-cover"
             />
           </div>
-          <div className="glass-pill absolute -right-2 -bottom-3 flex items-center gap-1.5 rounded-full border border-indigo-400/40 bg-indigo-600/90 px-3 py-1 text-xs font-bold text-white shadow-lg backdrop-blur-md dark:bg-indigo-500/90">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>플랜두씨</span>
-          </div>
         </div>
 
         {/* Center: Main Intro & Description */}
@@ -27,7 +23,7 @@ export const HeroBanner: React.FC = () => {
           </div>
           <h2 className="mt-2.5 text-xl font-extrabold tracking-tight text-neutral-900 sm:text-2xl dark:text-neutral-100">
             안녕하세요! 목표 달성 파트너,{' '}
-            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
+            <span className="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
               플랜두씨
             </span>
             예요 👋

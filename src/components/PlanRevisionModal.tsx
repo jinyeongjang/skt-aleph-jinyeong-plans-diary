@@ -19,13 +19,13 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/40 p-4 backdrop-blur-md duration-200 sm:p-6"
+      className="animate-in fade-in fixed inset-0 z-100 flex items-center justify-center bg-neutral-950/50 p-4 backdrop-blur-md duration-200 sm:p-6"
     >
-      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/90 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] backdrop-blur-2xl dark:border-white/10 dark:bg-neutral-900/90 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
+      <div className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/80 bg-white/85 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)] backdrop-blur-2xl dark:border-white/10 dark:bg-neutral-900/85 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-100 px-6 py-5 dark:border-neutral-800/80">
+        <div className="flex items-center justify-between border-b border-neutral-200/70 px-6 py-5 dark:border-white/[0.08]">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 shadow-inner dark:border-indigo-500/30 dark:bg-indigo-500/20 dark:text-indigo-400">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/20 to-violet-500/20 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:text-indigo-400">
               <History className="h-5 w-5" />
             </div>
             <div>
@@ -33,7 +33,7 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
                 <h2 className="text-base font-bold text-neutral-900 sm:text-lg dark:text-neutral-100">
                   계획 수정 이력
                 </h2>
-                <span className="rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-bold text-indigo-700 dark:text-indigo-300">
+                <span className="glass-pill rounded-full border-indigo-500/30 bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-bold text-indigo-700 dark:text-indigo-300">
                   T06-C08 원본 보존
                 </span>
               </div>
@@ -53,10 +53,10 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
         {/* Content */}
         <div className="custom-scrollbar space-y-6 overflow-y-auto p-6">
           {/* 현재 활성 계획 (Current Plan) */}
-          <div className="rounded-2xl border border-indigo-500/30 bg-indigo-50/50 p-5 shadow-2xs dark:border-indigo-500/30 dark:bg-indigo-950/30">
+          <div className="rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-50/70 via-violet-50/50 to-transparent p-5 shadow-2xs backdrop-blur-md dark:border-indigo-400/30 dark:from-indigo-950/40 dark:via-violet-950/20 dark:to-transparent">
             <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-bold text-white shadow-2xs">
+                <span className="rounded-full bg-gradient-to-r from-indigo-600 to-indigo-700 px-2.5 py-0.5 text-xs font-bold text-white shadow-2xs">
                   현재 최신 계획 (Active)
                 </span>
                 <span className="font-mono text-xs text-neutral-500">ID: {currentPlan.id.slice(0, 8)}...</span>
@@ -94,7 +94,7 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
               <h4 className="flex items-center gap-2 text-sm font-bold text-neutral-900 dark:text-neutral-100">
                 <span>보존된 수정 전 스냅샷 ({revisions.length}건)</span>
                 {revisions.length > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="glass-pill inline-flex items-center gap-1 rounded-full border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     T06-C08 충족
                   </span>
@@ -117,10 +117,10 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
                 {revisions.map((rev) => (
                   <div
                     key={rev.id}
-                    className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4.5 shadow-2xs transition-colors dark:border-neutral-800/80 dark:bg-neutral-950/60"
+                    className="hover-lift rounded-2xl border border-neutral-200/80 bg-white/60 p-4.5 shadow-2xs backdrop-blur-sm transition-colors dark:border-white/[0.08] dark:bg-white/[0.03]"
                   >
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="rounded-lg bg-neutral-100 px-2.5 py-1 text-xs font-bold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+                      <span className="glass-pill rounded-lg px-2.5 py-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
                         수정 차수 #{rev.revision_number}
                       </span>
                       <span className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -135,7 +135,7 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
                       <div>예상 시간: {formatMinutes(rev.estimated_minutes)}</div>
                       <div>우선순위: {rev.priority}</div>
                     </div>
-                    <div className="mt-2.5 rounded-xl border border-neutral-200/70 bg-neutral-50/70 p-3 text-xs text-neutral-600 dark:border-neutral-800/70 dark:bg-neutral-950/60 dark:text-neutral-400">
+                    <div className="mt-2.5 rounded-xl border border-neutral-200/70 bg-neutral-100/60 p-3 text-xs text-neutral-600 dark:border-white/[0.06] dark:bg-white/[0.02] dark:text-neutral-400">
                       <strong className="text-neutral-700 dark:text-neutral-300">성공 기준:</strong>{' '}
                       {rev.success_criteria}
                     </div>
@@ -147,10 +147,10 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end border-t border-neutral-100 px-6 py-4 dark:border-neutral-800/80">
+        <div className="flex justify-end border-t border-neutral-200/70 px-6 py-4 dark:border-white/[0.08]">
           <button
             onClick={onClose}
-            className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-200 bg-white/80 px-5 py-2.5 text-xs font-bold text-neutral-800 shadow-2xs hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-700"
+            className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-200/80 bg-white/80 px-5 py-2.5 text-xs font-bold text-neutral-800 shadow-2xs transition-all hover:bg-neutral-100 dark:border-white/10 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-700"
           >
             닫기
           </button>
