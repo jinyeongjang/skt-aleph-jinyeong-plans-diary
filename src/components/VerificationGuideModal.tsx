@@ -30,7 +30,7 @@ export const VerificationGuideModal: React.FC<VerificationGuideModalProps> = ({ 
   const sqlCode = `-- Supabase SQL Editor에서 실행
 -- contracts/pds-schema-v2.json 명세 준수
 CREATE TABLE IF NOT EXISTS plans (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS plans (
 );
 
 CREATE TABLE IF NOT EXISTS plan_revisions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  plan_id UUID NOT NULL REFERENCES plans(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY,
+  plan_id TEXT NOT NULL REFERENCES plans(id) ON DELETE CASCADE,
   revision_number INTEGER NOT NULL,
   title TEXT NOT NULL,
   start_date DATE NOT NULL,
@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS plan_revisions (
 );
 
 CREATE TABLE IF NOT EXISTS todos (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  plan_id UUID NOT NULL REFERENCES plans(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY,
+  plan_id TEXT NOT NULL REFERENCES plans(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed')),
   due_date DATE NOT NULL,
@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS todos (
 );
 
 CREATE TABLE IF NOT EXISTS execution_logs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  todo_id UUID NOT NULL REFERENCES todos(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY,
+  todo_id TEXT NOT NULL REFERENCES todos(id) ON DELETE CASCADE,
   start_time TIMESTAMPTZ NOT NULL,
   end_time TIMESTAMPTZ NOT NULL,
   actual_minutes INTEGER NOT NULL,
@@ -81,8 +81,8 @@ CREATE TABLE IF NOT EXISTS execution_logs (
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  plan_id UUID NOT NULL REFERENCES plans(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY,
+  plan_id TEXT NOT NULL REFERENCES plans(id) ON DELETE CASCADE,
   next_action_note TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
