@@ -62,19 +62,26 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="animate-in fade-in fixed inset-0 z-100 flex items-center justify-center bg-neutral-950/50 p-4 backdrop-blur-md duration-200 sm:p-6"
+      className="animate-in fade-in fixed inset-0 z-100 flex items-center justify-center bg-neutral-950/60 p-4 duration-200 sm:p-6"
     >
-      <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-white/80 bg-white/85 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)] backdrop-blur-2xl dark:border-white/10 dark:bg-neutral-900/85 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
+      <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-200/70 px-6 py-5 dark:border-white/[0.08]">
+        <div className="relative flex items-center justify-between border-b border-neutral-200 px-6 py-5 dark:border-neutral-800">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/20 to-violet-500/20 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:text-indigo-400">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-50 text-indigo-600 dark:border-indigo-400/30 dark:bg-indigo-950/50 dark:text-indigo-400">
               <PlusCircle className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-neutral-900 sm:text-lg dark:text-neutral-100">새 계획 세우기</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-bold text-neutral-900 sm:text-lg dark:text-neutral-100">
+                  새 계획 세우기
+                </h3>
+                <span className="rounded-full border border-indigo-500/30 bg-indigo-50 px-2 py-0.5 text-[10px] font-bold text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300">
+                  Plan
+                </span>
+              </div>
               <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                돌아보기(See)에서 얻은 피드백을 반영하여 새로운 목표를 수립합니다.
+                돌아보기(See) 피드백을 연계하여 새로운 목표를 수립합니다.
               </p>
             </div>
           </div>
@@ -88,7 +95,7 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="custom-scrollbar flex flex-col overflow-y-auto">
+        <form onSubmit={handleSubmit} className="custom-scrollbar relative flex flex-col overflow-y-auto">
           <div className="space-y-4 p-6">
             <div>
               <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
@@ -99,7 +106,7 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                 placeholder="예: 다음 스프린트 목표 및 성능 최적화"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs backdrop-blur-xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-100 dark:focus:bg-neutral-900"
+                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
                 required
               />
             </div>
@@ -113,7 +120,7 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs backdrop-blur-xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-100 dark:focus:bg-neutral-900"
+                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
                   required
                 />
               </div>
@@ -125,37 +132,66 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs backdrop-blur-xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-100 dark:focus:bg-neutral-900"
+                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
                   required
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                  우선순위
+                  우선순위 (T06-C05)
                 </label>
-                <select
-                  value={priority}
-                  onChange={(e) => setPriority(e.target.value as Priority)}
-                  className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs backdrop-blur-xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-100 dark:focus:bg-neutral-900"
-                >
-                  <option value="high">High (높음)</option>
-                  <option value="medium">Medium (보통)</option>
-                  <option value="low">Low (낮음)</option>
-                </select>
+                <div className="grid grid-cols-3 gap-1 rounded-xl border border-neutral-200 bg-neutral-100 p-1 dark:border-neutral-800 dark:bg-neutral-950">
+                  <button
+                    type="button"
+                    onClick={() => setPriority('high')}
+                    className={`flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-semibold transition-all ${
+                      priority === 'high'
+                        ? 'bg-rose-500 text-white shadow-xs'
+                        : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
+                    }`}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    높음
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPriority('medium')}
+                    className={`flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-semibold transition-all ${
+                      priority === 'medium'
+                        ? 'bg-amber-500 text-white shadow-xs'
+                        : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
+                    }`}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    보통
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPriority('low')}
+                    className={`flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-semibold transition-all ${
+                      priority === 'low'
+                        ? 'bg-sky-500 text-white shadow-xs'
+                        : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
+                    }`}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    낮음
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                  예상 시간(분)
+                  예상 시간(분) (T06-C07)
                 </label>
                 <input
                   type="number"
                   min="1"
                   value={estimatedMinutes}
                   onChange={(e) => setEstimatedMinutes(Number(e.target.value))}
-                  className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs backdrop-blur-xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-100 dark:focus:bg-neutral-900"
+                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
                   required
                 />
               </div>
@@ -165,7 +201,7 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
               <label className="mb-1.5 flex items-center justify-between text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                 <span>성공 기준 (T06-C06 / 피드백 연계 T06-C33)</span>
                 {prefilledNextActionNote && (
-                  <span className="glass-pill inline-flex items-center gap-1 rounded-full border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-[10px] font-bold text-indigo-600 dark:text-indigo-300">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-indigo-500/30 bg-indigo-50 px-2 py-0.5 text-[10px] font-bold text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300">
                     <Sparkles className="h-2.5 w-2.5" /> 피드백 자동 승계됨
                   </span>
                 )}
@@ -175,23 +211,23 @@ export const NewPlanModal: React.FC<NewPlanModalProps> = ({
                 value={successCriteria}
                 onChange={(e) => setSuccessCriteria(e.target.value)}
                 placeholder="달성 목표 및 돌아보기에서 도출된 개선점을 입력하세요"
-                className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs backdrop-blur-xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-100 dark:focus:bg-neutral-900"
+                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs text-neutral-900 transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:bg-neutral-900"
                 required
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-2.5 border-t border-neutral-200/70 px-6 py-4 dark:border-white/[0.08]">
+          <div className="flex items-center justify-end gap-2.5 border-t border-neutral-200 px-6 py-4 dark:border-neutral-800">
             <button
               type="button"
               onClick={onClose}
-              className="hover-lift active-press cursor-pointer rounded-xl px-4 py-2.5 text-xs font-semibold text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+              className="hover-lift cursor-pointer rounded-xl border border-neutral-200 bg-neutral-100 px-4 py-2.5 text-xs font-semibold text-neutral-600 transition-all hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
             >
               취소
             </button>
             <button
               type="submit"
-              className="hover-lift active-press cursor-pointer rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/20 transition-all hover:from-indigo-500 hover:to-indigo-600"
+              className="hover-lift cursor-pointer rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:from-indigo-500 hover:to-violet-500"
             >
               새 계획 등록
             </button>
