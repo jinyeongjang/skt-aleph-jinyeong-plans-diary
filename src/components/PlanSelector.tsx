@@ -10,6 +10,7 @@ import {
   Target,
   CheckCircle2,
   Compass,
+  Loader2,
 } from 'lucide-react';
 import type { Plan } from '../types/pds.ts';
 import { formatMinutes } from '../utils/dateUtils.ts';
@@ -19,10 +20,57 @@ interface PlanSelectorProps {
   selectedPlanId: string | null;
   onSelectPlan: (planId: string) => void;
   onOpenNewPlan?: () => void;
+  isLoading?: boolean;
 }
 
-export const PlanSelector: React.FC<PlanSelectorProps> = ({ plans, selectedPlanId, onSelectPlan, onOpenNewPlan }) => {
+export const PlanSelector: React.FC<PlanSelectorProps> = ({
+  plans,
+  selectedPlanId,
+  onSelectPlan,
+  onOpenNewPlan,
+  isLoading = false,
+}) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // 로딩 중일 때 표시되는 깔끔한 스피너 및 '불러오는 중...' 인디케이터
+  if (isLoading) {
+    return (
+      <section aria-label="계획 선택 바 로딩 중" className="animate-in fade-in relative duration-200">
+        <div className="relative flex items-center justify-between overflow-hidden rounded-3xl border border-white/80 bg-white/75 px-5 py-4 shadow-[0_8px_32px_0_rgba(31,38,135,0.06)] backdrop-blur-2xl transition-all duration-300 dark:border-white/10 dark:bg-neutral-900/70 dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
+          {/* 상단 림라이트 */}
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+            aria-hidden="true"
+          />
+
+          {/* 미세 앰비언트 글로우 오브 */}
+          <div
+            className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full bg-indigo-500/10 blur-2xl dark:bg-indigo-400/15"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute -bottom-10 -left-10 h-24 w-24 rounded-full bg-violet-500/10 blur-2xl dark:bg-violet-400/15"
+            aria-hidden="true"
+          />
+
+          <div className="flex items-center gap-3">
+            <div className="flex h-8.5 w-8.5 items-center justify-center rounded-xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/15 to-violet-500/15 text-indigo-600 shadow-inner backdrop-blur-md dark:border-indigo-400/30 dark:from-indigo-500/20 dark:to-violet-500/20 dark:text-indigo-300">
+              <Layers className="h-4 w-4" />
+            </div>
+            <span className="text-sm font-bold tracking-tight text-neutral-800 dark:text-neutral-100">
+              내 계획 선택
+            </span>
+          </div>
+
+          {/* 로딩 스피너 및 '불러오는 중...' 텍스트 */}
+          <div className="flex items-center gap-2.5 rounded-full border border-neutral-200/80 bg-white/70 px-4 py-1.5 shadow-xs backdrop-blur-md dark:border-neutral-800/80 dark:bg-neutral-900/70">
+            <Loader2 className="h-4 w-4 animate-spin text-indigo-600 dark:text-indigo-400" />
+            <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-300">불러오는 중...</span>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!plans || plans.length === 0) return null;
 
@@ -84,7 +132,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({ plans, selectedPlanI
   };
 
   return (
-    <section aria-label="계획 선택 바" className="relative">
+    <section aria-label="계획 선택 바" className="animate-in fade-in relative duration-300">
       {/* 글래스모피즘 메인 셸 */}
       <div className="relative overflow-hidden rounded-3xl border border-white/80 bg-white/75 p-3.5 shadow-[0_8px_32px_0_rgba(31,38,135,0.06)] backdrop-blur-2xl transition-all duration-300 sm:p-5 dark:border-white/10 dark:bg-neutral-900/70 dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
         {/* 미세 앰비언트 글로우 오브 */}

@@ -61,6 +61,7 @@ export const App: React.FC = () => {
 
   // 애플리케이션 데이터 상태
   const [plans, setPlans] = useState<Plan[]>([]);
+  const [isLoadingPlans, setIsLoadingPlans] = useState<boolean>(true);
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const currentPlan = (selectedPlanId ? plans.find((p) => p.id === selectedPlanId) : null) || plans[0] || null;
 
@@ -112,11 +113,29 @@ export const App: React.FC = () => {
 
   // 마운트 시 전체 계획 목록 로드
   useEffect(() => {
-    const timer = setTimeout(() => {
-      void loadPlans();
-    }, 0);
-    return () => clearTimeout(timer);
-  }, [loadPlans]);
+    let isMounted = true;
+    const fetchInitialPlans = async () => {
+      setIsLoadingPlans(true);
+      try {
+        const allPlans = await getPlans();
+        if (isMounted) {
+          setPlans(allPlans);
+        }
+      } catch (error) {
+        console.error('계획 로드 중 오류 발생:', error);
+      } finally {
+        if (isMounted) {
+          setIsLoadingPlans(false);
+        }
+      }
+    };
+
+    void fetchInitialPlans();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // 활성 계획 변경 시 세부 데이터 로드 (currentPlan.id 원시값 기준 단일 실행)
   useEffect(() => {
@@ -263,10 +282,11 @@ export const App: React.FC = () => {
         {/* 상단 플랜두씨 마스코트 히어로 배너 */}
         <HeroBanner />
 
-        {/* 복수/단일 계획 전환 및 탐색 바 */}
-        {plans.length > 0 && (
+        {/* 복수/단일 계획 전환 및 탐색 바 (로딩 상태 및 계획 목록) */}
+        {(isLoadingPlans || plans.length > 0) && (
           <PlanSelector
             plans={plans}
+            isLoading={isLoadingPlans}
             selectedPlanId={currentPlan?.id || null}
             onSelectPlan={(id) => setSelectedPlanId(id)}
             onOpenNewPlan={() => {
