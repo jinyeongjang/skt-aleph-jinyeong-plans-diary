@@ -340,11 +340,16 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
       </div>
 
       {/* Todo List Cards */}
-      <div className="mt-5 space-y-3">
+      <div className="mt-5 space-y-3.5">
         {filteredTodos.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-neutral-300 p-8 text-center dark:border-neutral-700">
-            <AlertCircle className="mx-auto mb-2 h-6 w-6 text-neutral-400" />
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">조건에 일치하는 할 일이 없습니다.</p>
+          <div className="rounded-2xl border border-dashed border-neutral-300/80 bg-neutral-50/40 p-10 text-center dark:border-neutral-700/80 dark:bg-neutral-900/40">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-200/60 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500">
+              <AlertCircle className="h-6 w-6" />
+            </div>
+            <h4 className="text-sm font-bold text-neutral-800 dark:text-neutral-200">일치하는 할 일이 없습니다</h4>
+            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+              검색 키워드나 필터 조건을 변경하여 다시 확인해보세요.
+            </p>
           </div>
         ) : (
           filteredTodos.map((todo) => {
@@ -356,54 +361,77 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
             return (
               <div
                 key={todo.id}
-                className={`glass-panel hover-lift rounded-2xl p-4.5 transition-all ${
+                className={`group relative overflow-hidden rounded-2xl border p-4.5 transition-all duration-200 sm:p-5 ${
                   todo.status === 'completed'
-                    ? 'border-neutral-200/50 bg-neutral-50/40 opacity-70 dark:border-neutral-800/50 dark:bg-neutral-950/30'
+                    ? 'border-neutral-200/60 bg-neutral-50/50 opacity-75 backdrop-blur-sm dark:border-neutral-800/60 dark:bg-neutral-950/40'
                     : isDelayed
-                      ? 'border-rose-300/80 bg-rose-50/50 shadow-xs dark:border-rose-800/60 dark:bg-rose-950/30'
-                      : 'hover:border-emerald-500/30'
+                      ? 'border-rose-300/90 bg-rose-50/40 shadow-sm backdrop-blur-md hover:border-rose-400 dark:border-rose-900/80 dark:bg-rose-950/20 dark:hover:border-rose-800'
+                      : 'border-neutral-200/80 bg-white/70 shadow-xs backdrop-blur-md hover:-translate-y-0.5 hover:border-indigo-300/80 hover:bg-white hover:shadow-md dark:border-neutral-800/80 dark:bg-neutral-900/70 dark:hover:border-indigo-800/80 dark:hover:bg-neutral-900'
                 }`}
               >
-                <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                {/* Status Indicator Left Strip for Delayed/Blocked */}
+                {isDelayed && todo.status !== 'completed' && (
+                  <div className="absolute inset-y-0 left-0 w-1 bg-rose-500" />
+                )}
+                {isBlocked && todo.status !== 'completed' && !isDelayed && (
+                  <div className="absolute inset-y-0 left-0 w-1 bg-amber-500" />
+                )}
+
+                <div className="flex flex-col justify-between gap-3.5 sm:flex-row sm:items-center">
                   {/* Left: Complete Checkbox & Content */}
                   <div className="flex min-w-0 flex-1 items-start gap-3.5">
                     <button
                       onClick={() => (todo.status === 'completed' ? onRevertTodo(todo.id) : onCompleteTodo(todo.id))}
-                      className="hover-lift active-press mt-0.5 shrink-0 cursor-pointer text-neutral-400 transition-colors hover:text-emerald-600 dark:hover:text-emerald-400"
+                      className="hover-lift active-press mt-0.5 shrink-0 cursor-pointer transition-transform"
                       title={todo.status === 'completed' ? '진행 중으로 되돌리기 (T06-C12)' : '완료로 바꾸기 (T06-C11)'}
                     >
                       {todo.status === 'completed' ? (
-                        <CheckSquare className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                        <div className="flex h-5.5 w-5.5 items-center justify-center rounded-lg bg-emerald-500 text-white shadow-xs dark:bg-emerald-600">
+                          <CheckSquare className="h-4 w-4 stroke-[2.5]" />
+                        </div>
                       ) : (
-                        <Square className="h-5 w-5" />
+                        <div className="flex h-5.5 w-5.5 items-center justify-center rounded-lg border-2 border-neutral-300 bg-white text-transparent transition-colors hover:border-emerald-500 hover:text-emerald-500 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-emerald-400">
+                          <Square className="h-3.5 w-3.5" />
+                        </div>
                       )}
                     </button>
 
                     <div className="min-w-0 flex-1">
-                      <div className="mb-1.5 flex flex-wrap items-center gap-2">
+                      {/* Top Badges & Tags Row */}
+                      <div className="mb-2 flex flex-wrap items-center gap-1.5">
                         {/* Priority Badge (T06-C15) */}
                         <span
-                          className={`rounded-lg border px-2.5 py-0.5 text-[11px] font-bold uppercase shadow-2xs ${
+                          className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase ${
                             todo.priority === 'high'
-                              ? 'border-rose-200 bg-rose-100 text-rose-800 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-300'
+                              ? 'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/60 dark:text-rose-300'
                               : todo.priority === 'medium'
-                                ? 'border-amber-200 bg-amber-100 text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300'
-                                : 'border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300'
+                                ? 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-300'
+                                : 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/60 dark:text-emerald-300'
                           }`}
                         >
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                              todo.priority === 'high'
+                                ? 'bg-rose-500'
+                                : todo.priority === 'medium'
+                                  ? 'bg-amber-500'
+                                  : 'bg-emerald-500'
+                            }`}
+                          />
                           {todo.priority}
                         </span>
 
                         {/* Delayed Badge (T06-C30) */}
                         {isDelayed && (
-                          <span className="rounded-lg bg-rose-600 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-2xs">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-rose-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-2xs">
+                            <span className="h-1.5 w-1.5 animate-ping rounded-full bg-white" />
                             마감 지연
                           </span>
                         )}
 
                         {/* Blocked Badge (T06-C31) */}
                         {isBlocked && (
-                          <span className="rounded-lg bg-amber-500 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-2xs">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-2xs">
                             막힘 발생
                           </span>
                         )}
@@ -412,9 +440,9 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                         {todo.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="inline-flex items-center gap-1 rounded-lg border border-neutral-200/70 bg-neutral-100/80 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:border-neutral-800 dark:bg-neutral-800/80 dark:text-neutral-400"
+                            className="inline-flex items-center gap-1 rounded-md border border-neutral-200/80 bg-neutral-100/70 px-2 py-0.5 text-[10px] font-semibold text-neutral-600 dark:border-neutral-800 dark:bg-neutral-800/70 dark:text-neutral-400"
                           >
-                            <Tag className="h-2.5 w-2.5 text-neutral-400" />
+                            <Tag className="h-2.5 w-2.5 opacity-60" />
                             {tag}
                           </span>
                         ))}
@@ -422,26 +450,26 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
 
                       {/* Content text (T06-C57 XSS 방어: safe react text node) */}
                       <p
-                        className={`text-sm font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 ${
+                        className={`text-sm font-bold tracking-tight text-neutral-900 sm:text-[15px] dark:text-neutral-100 ${
                           todo.status === 'completed' ? 'text-neutral-400 line-through dark:text-neutral-500' : ''
                         }`}
                       >
                         {todo.content}
                       </p>
 
-                      {/* Metadata Row */}
-                      <div className="mt-2.5 flex flex-wrap items-center gap-4 font-mono text-xs text-neutral-500 dark:text-neutral-400">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3.5 w-3.5 text-neutral-400" />
+                      {/* Metadata Row (Capsules) */}
+                      <div className="mt-2.5 flex flex-wrap items-center gap-2 font-mono text-[11px] text-neutral-500 dark:text-neutral-400">
+                        <span className="inline-flex items-center gap-1 rounded-lg border border-neutral-200/70 bg-neutral-50/70 px-2.5 py-1 text-neutral-600 dark:border-neutral-800 dark:bg-neutral-950/50 dark:text-neutral-400">
+                          <Calendar className="h-3 w-3 text-neutral-400" />
                           마감: {todo.due_date}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3.5 w-3.5 text-indigo-500" />
+                        <span className="inline-flex items-center gap-1 rounded-lg border border-indigo-500/20 bg-indigo-50/50 px-2.5 py-1 text-indigo-700 dark:border-indigo-500/30 dark:bg-indigo-950/40 dark:text-indigo-300">
+                          <Clock className="h-3 w-3 text-indigo-500" />
                           예상: {formatMinutes(todo.estimated_minutes)} ({todo.estimated_minutes}분)
                         </span>
                         {actualTotalMin > 0 && (
-                          <span className="flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400">
-                            <Zap className="h-3.5 w-3.5" />
+                          <span className="inline-flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-50/70 px-2.5 py-1 font-bold text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-950/40 dark:text-emerald-300">
+                            <Zap className="h-3 w-3 text-emerald-500" />
                             실제: {formatMinutes(actualTotalMin)}
                           </span>
                         )}
@@ -454,10 +482,10 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     {/* 실행 기록 작성 버튼 (카드 3) */}
                     <button
                       onClick={() => setActiveExecTodo(todo)}
-                      className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-50/80 px-3 py-1.5 text-xs font-semibold text-emerald-700 shadow-2xs backdrop-blur-xs transition-all hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                      className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2 text-xs font-bold text-emerald-700 shadow-2xs transition-all hover:bg-emerald-500/20 dark:border-emerald-500/40 dark:bg-emerald-500/15 dark:text-emerald-300 dark:hover:bg-emerald-500/25"
                       title="실제 시작/종료 시각 및 막힌 이유 기록"
                     >
-                      <Play className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <Play className="h-3.5 w-3.5 fill-emerald-600 text-emerald-600 dark:fill-emerald-400 dark:text-emerald-400" />
                       <span>실행 기록 ({todoLogs.length})</span>
                     </button>
 
@@ -465,7 +493,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     {todo.status === 'completed' ? (
                       <button
                         onClick={() => onRevertTodo(todo.id)}
-                        className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-200/80 bg-white p-2 text-neutral-500 shadow-2xs transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-500 shadow-2xs transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                         title="진행 중으로 되돌리기 (T06-C12)"
                       >
                         <RotateCcw className="h-4 w-4" />
@@ -473,7 +501,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     ) : (
                       <button
                         onClick={() => onCompleteTodo(todo.id)}
-                        className="hover-lift active-press cursor-pointer rounded-xl border border-emerald-500/30 bg-emerald-50/80 p-2 text-emerald-600 shadow-2xs transition-colors hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-950/50"
+                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-50/80 text-emerald-600 shadow-2xs transition-colors hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-950/50 dark:text-emerald-400 dark:hover:bg-emerald-900/50"
                         title="완료로 변경 (T06-C11)"
                       >
                         <CheckSquare className="h-4 w-4" />
@@ -483,7 +511,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     {/* 수정 버튼 (T06-C10) */}
                     <button
                       onClick={() => openEditModal(todo)}
-                      className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-200/80 bg-white p-2 text-neutral-500 shadow-2xs transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                      className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-500 shadow-2xs transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                       title="할 일 수정 (T06-C10)"
                     >
                       <Edit2 className="h-4 w-4" />
@@ -492,7 +520,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     {/* 삭제 버튼 (T06-C13) */}
                     <button
                       onClick={() => onDeleteTodo(todo.id)}
-                      className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-200/80 bg-white p-2 text-rose-500 shadow-2xs transition-colors hover:bg-rose-50 hover:text-rose-700 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-rose-950/40 dark:hover:text-rose-400"
+                      className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-rose-500 shadow-2xs transition-colors hover:bg-rose-50 hover:text-rose-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-rose-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
                       title="할 일 삭제 (T06-C13)"
                     >
                       <Trash2 className="h-4 w-4" />
