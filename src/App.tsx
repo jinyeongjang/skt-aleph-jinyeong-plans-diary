@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Header } from './components/Header.tsx';
 import { NoticeBanner } from './components/NoticeBanner.tsx';
+import { HeroBanner } from './components/HeroBanner.tsx';
 import { PlanSection } from './components/PlanSection.tsx';
 import { TodoSection } from './components/TodoSection.tsx';
 import { SeeDashboardSection } from './components/SeeDashboardSection.tsx';
@@ -253,6 +254,9 @@ export const App: React.FC = () => {
       <main className="mx-auto max-w-7xl space-y-8 px-4 pt-20 sm:px-6 sm:pt-24">
         {/* T06-C82 공개 안내 및 DB 상태 배너 */}
         <NoticeBanner onOpenDbGuide={() => setIsGuideOpen(true)} />
+
+        {/* 상단 플랜두씨 마스코트 히어로 배너 */}
+        <HeroBanner />
 
         {/* 복수 계획 전환 탭 (계획이 여러 개일 경우) */}
         {plans.length > 1 && (

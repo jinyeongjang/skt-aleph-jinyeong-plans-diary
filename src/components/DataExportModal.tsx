@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Download, X, Copy, Check, FileJson, RefreshCw } from 'lucide-react';
 import type { PdsFullDataExport } from '../types/pds.ts';
 
@@ -38,11 +39,16 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
     }
   };
 
-  return (
-    <div className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
-      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/95 shadow-[0_20px_50px_rgba(0,0,0,0.15)] backdrop-blur-2xl dark:border-neutral-800/90 dark:bg-neutral-900/95 dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+    >
+      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50/80 px-6 py-5 dark:border-neutral-800/80 dark:bg-neutral-950/80">
+        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50 px-6 py-5 dark:border-neutral-800/80 dark:bg-neutral-950">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-blue-500/20 bg-blue-500/10 text-blue-600 shadow-inner dark:bg-blue-500/20 dark:text-blue-400">
               <FileJson className="h-5 w-5" />
@@ -72,25 +78,25 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
         {/* Content */}
         <div className="custom-scrollbar space-y-4 overflow-y-auto p-6">
           <div className="grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
-            <div className="rounded-2xl border border-neutral-200/80 bg-white/70 p-3.5 shadow-2xs backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-3.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
               <span className="block text-xs font-semibold text-neutral-500">계획</span>
               <strong className="mt-1 block text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {exportData.plans.length}건
               </strong>
             </div>
-            <div className="rounded-2xl border border-neutral-200/80 bg-white/70 p-3.5 shadow-2xs backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-3.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
               <span className="block text-xs font-semibold text-neutral-500">할 일</span>
               <strong className="mt-1 block text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {exportData.todos.length}건
               </strong>
             </div>
-            <div className="rounded-2xl border border-neutral-200/80 bg-white/70 p-3.5 shadow-2xs backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-3.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
               <span className="block text-xs font-semibold text-neutral-500">실행 기록</span>
               <strong className="mt-1 block text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {exportData.executionLogs.length}건
               </strong>
             </div>
-            <div className="rounded-2xl border border-neutral-200/80 bg-white/70 p-3.5 shadow-2xs backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-3.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
               <span className="block text-xs font-semibold text-neutral-500">수정 이력</span>
               <strong className="mt-1 block text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {exportData.planRevisions.length}건
@@ -145,6 +151,7 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Play, CheckCircle, AlertTriangle, Clock, ShieldCheck, Zap } from 'lucide-react';
 import type { Todo, ExecutionLog } from '../types/pds.ts';
 import { calculateMinutesDiff, formatMinutes } from '../utils/dateUtils.ts';
@@ -113,11 +114,16 @@ export const ExecutionModal: React.FC<ExecutionModalProps> = ({
     );
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
-      <div className="relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white/95 shadow-2xl backdrop-blur-2xl transition-all dark:border-neutral-800/90 dark:bg-neutral-900/95">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+    >
+      <div className="relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white shadow-2xl transition-all dark:border-neutral-800 dark:bg-neutral-900">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50/80 px-6 py-4.5 dark:border-neutral-800/80 dark:bg-neutral-950/80">
+        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50 px-6 py-4.5 dark:border-neutral-800/80 dark:bg-neutral-950">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 shadow-inner dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
               <Play className="h-5 w-5" />
@@ -302,6 +308,7 @@ export const ExecutionModal: React.FC<ExecutionModalProps> = ({
           </form>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };

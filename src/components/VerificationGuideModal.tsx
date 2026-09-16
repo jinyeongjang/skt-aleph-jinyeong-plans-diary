@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   FileCheck2,
@@ -104,11 +105,16 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
     setTimeout(() => setCopiedSql(false), 2000);
   };
 
-  return (
-    <div className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
-      <div className="flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/95 shadow-[0_20px_50px_rgba(0,0,0,0.15)] backdrop-blur-2xl dark:border-neutral-800/90 dark:bg-neutral-900/95 dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+    >
+      <div className="flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50/80 px-6 py-5 dark:border-neutral-800/80 dark:bg-neutral-950/80">
+        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50 px-6 py-5 dark:border-neutral-800/80 dark:bg-neutral-950">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 shadow-inner dark:bg-indigo-500/20 dark:text-indigo-400">
               <FileCheck2 className="h-5 w-5" />
@@ -136,8 +142,8 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
         </div>
 
         {/* Tab Navigation */}
-        <div className="border-b border-neutral-200/80 bg-neutral-50/50 px-6 py-2 dark:border-neutral-800/80 dark:bg-neutral-950/50">
-          <div className="flex items-center gap-1.5 rounded-2xl border border-neutral-200/60 bg-neutral-100/70 p-1 backdrop-blur-xs dark:border-neutral-800/60 dark:bg-neutral-800/60">
+        <div className="border-b border-neutral-200/80 bg-neutral-50 px-6 py-2 dark:border-neutral-800/80 dark:bg-neutral-950">
+          <div className="flex items-center gap-1.5 rounded-2xl border border-neutral-200/60 bg-neutral-100 p-1 dark:border-neutral-800/60 dark:bg-neutral-800">
             <button
               onClick={() => setActiveTab('4lines')}
               className={`hover-lift active-press flex-1 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
@@ -176,7 +182,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
           {/* Tab 1: 짧은 확인 방법 4줄 (T06-C59) */}
           {activeTab === '4lines' && (
             <div className="space-y-3.5">
-              <div className="rounded-2xl border border-neutral-200/80 bg-white/70 p-4.5 shadow-2xs backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+              <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
                 <div className="mb-1.5 flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                     <Compass className="h-3.5 w-3.5" />
@@ -188,7 +194,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-neutral-200/80 bg-white/70 p-4.5 shadow-2xs backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+              <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
                 <div className="mb-1.5 flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                     <ListOrdered className="h-3.5 w-3.5" />
@@ -207,7 +213,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-emerald-500/30 bg-emerald-50/40 p-4.5 shadow-2xs backdrop-blur-xs dark:border-emerald-500/30 dark:bg-emerald-950/20">
+              <div className="rounded-2xl border border-emerald-500/30 bg-emerald-50/50 p-4.5 shadow-2xs dark:border-emerald-500/30 dark:bg-emerald-950/30">
                 <div className="mb-1.5 flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
                     <CheckCircle2 className="h-3.5 w-3.5" />
@@ -222,7 +228,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-rose-500/30 bg-rose-50/40 p-4.5 shadow-2xs backdrop-blur-xs dark:border-rose-500/30 dark:bg-rose-950/20">
+              <div className="rounded-2xl border border-rose-500/30 bg-rose-50/50 p-4.5 shadow-2xs dark:border-rose-500/30 dark:bg-rose-950/30">
                 <div className="mb-1.5 flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400">
                     <AlertTriangle className="h-3.5 w-3.5" />
@@ -242,7 +248,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
           {/* Tab 2: AI와 내 판단 3줄 (T06-C60) */}
           {activeTab === '3lines' && (
             <div className="space-y-3.5">
-              <div className="rounded-2xl border border-neutral-200/80 bg-white/70 p-4.5 shadow-2xs backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+              <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
                 <div className="mb-1.5 flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                     <Bot className="h-3.5 w-3.5" />
@@ -255,7 +261,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-neutral-200/80 bg-white/70 p-4.5 shadow-2xs backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+              <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
                 <div className="mb-1.5 flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                     <UserCheck className="h-3.5 w-3.5" />
@@ -270,7 +276,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-neutral-200/80 bg-white/70 p-4.5 shadow-2xs backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+              <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
                 <div className="mb-1.5 flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                     <ShieldAlert className="h-3.5 w-3.5" />
@@ -291,7 +297,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
           {/* Tab 3: Supabase DB 설정 가이드 */}
           {activeTab === 'supabase' && (
             <div className="space-y-4">
-              <div className="rounded-2xl border border-blue-500/30 bg-blue-50/40 p-4 text-xs text-blue-950 shadow-2xs backdrop-blur-xs dark:border-blue-500/30 dark:bg-blue-950/30 dark:text-blue-200">
+              <div className="rounded-2xl border border-blue-500/30 bg-blue-50/70 p-4 text-xs text-blue-950 shadow-2xs dark:border-blue-500/30 dark:bg-blue-950/40 dark:text-blue-200">
                 <div className="mb-2 flex items-center gap-2 font-bold">
                   <Database className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   <span>Supabase 연동 3분 완성 가이드:</span>
@@ -313,7 +319,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   </li>
                   <li>
                     <strong>Project Settings ➔ API</strong>에서 Project URL과 anon key를 복사하여 프로젝트 루트의{' '}
-                    <code className="rounded bg-blue-100/80 px-1 py-0.5 font-mono text-[11px] dark:bg-blue-900/60">
+                    <code className="rounded bg-blue-100 px-1 py-0.5 font-mono text-[11px] dark:bg-blue-900/60">
                       .env.local
                     </code>
                     에 추가합니다.
@@ -328,7 +334,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   </span>
                   <button
                     onClick={handleCopySql}
-                    className="hover-lift active-press inline-flex items-center gap-1.5 rounded-xl border border-indigo-500/30 bg-indigo-50/70 px-3 py-1.5 text-xs font-bold text-indigo-600 transition-colors hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-950/50 dark:text-indigo-400"
+                    className="hover-lift active-press inline-flex items-center gap-1.5 rounded-xl border border-indigo-500/30 bg-indigo-50 px-3 py-1.5 text-xs font-bold text-indigo-600 transition-colors hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-950/50 dark:text-indigo-400"
                   >
                     {copiedSql ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                     <span>{copiedSql ? '복사 완료' : 'SQL 복사'}</span>
@@ -343,7 +349,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end border-t border-neutral-200/80 bg-neutral-50/80 px-6 py-4 dark:border-neutral-800/80 dark:bg-neutral-950/80">
+        <div className="flex justify-end border-t border-neutral-200/80 bg-neutral-50 px-6 py-4 dark:border-neutral-800/80 dark:bg-neutral-950">
           <button
             onClick={onClose}
             className="hover-lift active-press rounded-xl bg-neutral-200 px-5 py-2.5 text-xs font-bold text-neutral-800 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
@@ -352,6 +358,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };

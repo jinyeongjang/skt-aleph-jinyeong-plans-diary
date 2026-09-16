@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { History, X, Clock, Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { Plan, PlanRevision } from '../types/pds.ts';
 import { formatMinutes } from '../utils/dateUtils';
@@ -13,11 +14,16 @@ interface PlanRevisionModalProps {
 export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, onClose, currentPlan, revisions }) => {
   if (!isOpen || !currentPlan) return null;
 
-  return (
-    <div className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
-      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/95 shadow-[0_20px_50px_rgba(0,0,0,0.15)] backdrop-blur-2xl dark:border-neutral-800/90 dark:bg-neutral-900/95 dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+    >
+      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50/80 px-6 py-5 dark:border-neutral-800/80 dark:bg-neutral-950/80">
+        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50 px-6 py-5 dark:border-neutral-800/80 dark:bg-neutral-950">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 shadow-inner dark:bg-indigo-500/20 dark:text-indigo-400">
               <History className="h-5 w-5" />
@@ -47,7 +53,7 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
         {/* Content */}
         <div className="custom-scrollbar space-y-6 overflow-y-auto p-6">
           {/* 현재 활성 계획 (Current Plan) */}
-          <div className="rounded-2xl border border-indigo-500/30 bg-indigo-50/30 p-5 shadow-2xs backdrop-blur-xs dark:border-indigo-500/30 dark:bg-indigo-950/20">
+          <div className="rounded-2xl border border-indigo-500/30 bg-indigo-50/50 p-5 shadow-2xs dark:border-indigo-500/30 dark:bg-indigo-950/30">
             <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-bold text-white shadow-2xs">
@@ -111,7 +117,7 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
                 {revisions.map((rev) => (
                   <div
                     key={rev.id}
-                    className="rounded-2xl border border-neutral-200/80 bg-white/70 p-4.5 shadow-2xs backdrop-blur-xs transition-colors dark:border-neutral-800/80 dark:bg-neutral-900/60"
+                    className="rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4.5 shadow-2xs transition-colors dark:border-neutral-800/80 dark:bg-neutral-950/60"
                   >
                     <div className="mb-2 flex items-center justify-between">
                       <span className="rounded-lg bg-neutral-100 px-2.5 py-1 text-xs font-bold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
@@ -150,6 +156,7 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };

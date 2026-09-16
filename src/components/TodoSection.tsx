@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import {
   CheckSquare,
   Square,
@@ -507,204 +508,218 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
       />
 
       {/* Add Todo Modal (T06-C09) */}
-      {isAddOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
-          <div className="w-full max-w-md rounded-3xl border border-neutral-200/90 bg-white/95 p-6 shadow-2xl backdrop-blur-2xl transition-all sm:p-7 dark:border-neutral-800/90 dark:bg-neutral-900/95">
-            <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">새 할 일 만들기 (T06-C09)</h3>
-            <p className="mt-1 mb-5 text-xs text-neutral-500 dark:text-neutral-400">
-              계획에 딸린 할 일의 마감일·우선순위·태그·예상 시간을 등록합니다.
-            </p>
+      {isAddOpen &&
+        createPortal(
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setIsAddOpen(false);
+            }}
+            className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+          >
+            <div className="w-full max-w-md rounded-3xl border border-neutral-200/90 bg-white p-6 shadow-2xl transition-all sm:p-7 dark:border-neutral-800 dark:bg-neutral-900">
+              <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">새 할 일 만들기 (T06-C09)</h3>
+              <p className="mt-1 mb-5 text-xs text-neutral-500 dark:text-neutral-400">
+                계획에 딸린 할 일의 마감일·우선순위·태그·예상 시간을 등록합니다.
+              </p>
 
-            <form onSubmit={handleCreateSubmit} className="space-y-4">
-              <div>
-                <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                  할 일 내용
-                </label>
-                <input
-                  type="text"
-                  placeholder="예: Supabase 연결 설정 및 RLS 정책 검증"
-                  value={newContent}
-                  onChange={(e) => setNewContent(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-300/80 bg-white px-3.5 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
+              <form onSubmit={handleCreateSubmit} className="space-y-4">
                 <div>
                   <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                    마감일 (T06-C14)
-                  </label>
-                  <input
-                    type="date"
-                    value={newDueDate}
-                    onChange={(e) => setNewDueDate(e.target.value)}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                    우선순위 (T06-C15)
-                  </label>
-                  <select
-                    value={newPriority}
-                    onChange={(e) => setNewPriority(e.target.value as Priority)}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
-                  >
-                    <option value="high">High (높음)</option>
-                    <option value="medium">Medium (보통)</option>
-                    <option value="low">Low (낮음)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                    태그 (쉼표 구분) (T06-C16)
+                    할 일 내용
                   </label>
                   <input
                     type="text"
-                    placeholder="DB, Frontend, Test"
-                    value={newTags}
-                    onChange={(e) => setNewTags(e.target.value)}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                    예상 시간(분) (T06-C17)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={newEstimatedMinutes}
-                    onChange={(e) => setNewEstimatedMinutes(Number(e.target.value))}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                    placeholder="예: Supabase 연결 설정 및 RLS 정책 검증"
+                    value={newContent}
+                    onChange={(e) => setNewContent(e.target.value)}
+                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3.5 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
                     required
                   />
                 </div>
-              </div>
 
-              <div className="flex justify-end gap-2.5 border-t border-neutral-200/80 pt-4 dark:border-neutral-800/80">
-                <button
-                  type="button"
-                  onClick={() => setIsAddOpen(false)}
-                  className="hover-lift active-press cursor-pointer rounded-xl bg-neutral-100 px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
-                >
-                  취소
-                </button>
-                <button
-                  type="submit"
-                  className="hover-lift active-press cursor-pointer rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-emerald-700"
-                >
-                  할 일 등록
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      마감일 (T06-C14)
+                    </label>
+                    <input
+                      type="date"
+                      value={newDueDate}
+                      onChange={(e) => setNewDueDate(e.target.value)}
+                      className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      우선순위 (T06-C15)
+                    </label>
+                    <select
+                      value={newPriority}
+                      onChange={(e) => setNewPriority(e.target.value as Priority)}
+                      className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                    >
+                      <option value="high">High (높음)</option>
+                      <option value="medium">Medium (보통)</option>
+                      <option value="low">Low (낮음)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      태그 (쉼표 구분) (T06-C16)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="DB, Frontend, Test"
+                      value={newTags}
+                      onChange={(e) => setNewTags(e.target.value)}
+                      className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      예상 시간(분) (T06-C17)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={newEstimatedMinutes}
+                      onChange={(e) => setNewEstimatedMinutes(Number(e.target.value))}
+                      className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2.5 border-t border-neutral-200/80 pt-4 dark:border-neutral-800/80">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddOpen(false)}
+                    className="hover-lift active-press cursor-pointer rounded-xl bg-neutral-100 px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="submit"
+                    className="hover-lift active-press cursor-pointer rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-emerald-700"
+                  >
+                    할 일 등록
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>,
+          document.body,
+        )}
 
       {/* Edit Todo Modal (T06-C10) */}
-      {editingTodo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
-          <div className="w-full max-w-md rounded-3xl border border-neutral-200/90 bg-white/95 p-6 shadow-2xl backdrop-blur-2xl transition-all sm:p-7 dark:border-neutral-800/90 dark:bg-neutral-900/95">
-            <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">할 일 내용 고치기 (T06-C10)</h3>
-            <p className="mt-1 mb-5 text-xs text-neutral-500 dark:text-neutral-400">
-              내용·마감일·우선순위·태그·예상 시간을 수정합니다.
-            </p>
+      {editingTodo &&
+        createPortal(
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setEditingTodo(null);
+            }}
+            className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+          >
+            <div className="w-full max-w-md rounded-3xl border border-neutral-200/90 bg-white p-6 shadow-2xl transition-all sm:p-7 dark:border-neutral-800 dark:bg-neutral-900">
+              <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">할 일 내용 고치기 (T06-C10)</h3>
+              <p className="mt-1 mb-5 text-xs text-neutral-500 dark:text-neutral-400">
+                내용·마감일·우선순위·태그·예상 시간을 수정합니다.
+              </p>
 
-            <form onSubmit={handleEditSubmit} className="space-y-4">
-              <div>
-                <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                  할 일 내용
-                </label>
-                <input
-                  type="text"
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-300/80 bg-white px-3.5 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
+              <form onSubmit={handleEditSubmit} className="space-y-4">
                 <div>
                   <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                    마감일 (T06-C14)
-                  </label>
-                  <input
-                    type="date"
-                    value={editDueDate}
-                    onChange={(e) => setEditDueDate(e.target.value)}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                    우선순위 (T06-C15)
-                  </label>
-                  <select
-                    value={editPriority}
-                    onChange={(e) => setEditPriority(e.target.value as Priority)}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
-                  >
-                    <option value="high">High (높음)</option>
-                    <option value="medium">Medium (보통)</option>
-                    <option value="low">Low (낮음)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                    태그 (T06-C16)
+                    할 일 내용
                   </label>
                   <input
                     type="text"
-                    value={editTags}
-                    onChange={(e) => setEditTags(e.target.value)}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                    예상 시간(분) (T06-C17)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={editEstimatedMinutes}
-                    onChange={(e) => setEditEstimatedMinutes(Number(e.target.value))}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    className="w-full rounded-xl border border-neutral-300/80 bg-white px-3.5 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
                     required
                   />
                 </div>
-              </div>
 
-              <div className="flex justify-end gap-2.5 border-t border-neutral-200/80 pt-4 dark:border-neutral-800/80">
-                <button
-                  type="button"
-                  onClick={() => setEditingTodo(null)}
-                  className="hover-lift active-press cursor-pointer rounded-xl bg-neutral-100 px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
-                >
-                  취소
-                </button>
-                <button
-                  type="submit"
-                  className="hover-lift active-press cursor-pointer rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-indigo-700"
-                >
-                  수정 완료
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      마감일 (T06-C14)
+                    </label>
+                    <input
+                      type="date"
+                      value={editDueDate}
+                      onChange={(e) => setEditDueDate(e.target.value)}
+                      className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      우선순위 (T06-C15)
+                    </label>
+                    <select
+                      value={editPriority}
+                      onChange={(e) => setEditPriority(e.target.value as Priority)}
+                      className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                    >
+                      <option value="high">High (높음)</option>
+                      <option value="medium">Medium (보통)</option>
+                      <option value="low">Low (낮음)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      태그 (T06-C16)
+                    </label>
+                    <input
+                      type="text"
+                      value={editTags}
+                      onChange={(e) => setEditTags(e.target.value)}
+                      className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      예상 시간(분) (T06-C17)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={editEstimatedMinutes}
+                      onChange={(e) => setEditEstimatedMinutes(Number(e.target.value))}
+                      className="w-full rounded-xl border border-neutral-300/80 bg-white px-3 py-2 text-xs text-neutral-900 shadow-2xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-100"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2.5 border-t border-neutral-200/80 pt-4 dark:border-neutral-800/80">
+                  <button
+                    type="button"
+                    onClick={() => setEditingTodo(null)}
+                    className="hover-lift active-press cursor-pointer rounded-xl bg-neutral-100 px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="submit"
+                    className="hover-lift active-press cursor-pointer rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-indigo-700"
+                  >
+                    수정 완료
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 };
