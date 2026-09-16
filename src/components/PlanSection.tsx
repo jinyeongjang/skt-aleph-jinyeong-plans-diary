@@ -117,11 +117,11 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
         onClick={(e) => {
           if (e.target === e.currentTarget) setIsNewPlanModalOpen(false);
         }}
-        className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md duration-200 sm:p-6"
+        className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/40 p-4 backdrop-blur-md duration-200 sm:p-6"
       >
-        <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/85 shadow-2xl backdrop-blur-2xl dark:border-neutral-700/60 dark:bg-neutral-900/85 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
+        <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/90 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] backdrop-blur-2xl dark:border-white/10 dark:bg-neutral-900/90 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-neutral-200/60 bg-neutral-50/70 px-6 py-4.5 backdrop-blur-md dark:border-neutral-800/60 dark:bg-neutral-950/70">
+          <div className="flex items-center justify-between border-b border-neutral-100 px-6 py-5 dark:border-neutral-800/80">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 shadow-inner dark:border-indigo-500/30 dark:bg-indigo-500/20 dark:text-indigo-400">
                 <PlusCircle className="h-5 w-5" />
@@ -138,7 +138,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
             <button
               type="button"
               onClick={() => setIsNewPlanModalOpen(false)}
-              className="hover-lift active-press flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-400 shadow-2xs hover:bg-neutral-100 hover:text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+              className="hover-lift flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
             >
               <X className="h-4.5 w-4.5" />
             </button>
@@ -156,7 +156,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                   placeholder="예: 다음 스프린트 목표 및 성능 최적화"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                  className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                   required
                 />
               </div>
@@ -170,7 +170,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                     type="date"
                     value={newStartDate}
                     onChange={(e) => setNewStartDate(e.target.value)}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                    className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                     required
                   />
                 </div>
@@ -182,7 +182,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                     type="date"
                     value={newEndDate}
                     onChange={(e) => setNewEndDate(e.target.value)}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                    className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                     required
                   />
                 </div>
@@ -196,7 +196,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                   <select
                     value={newPriority}
                     onChange={(e) => setNewPriority(e.target.value as Priority)}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                    className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                   >
                     <option value="high">High (높음)</option>
                     <option value="medium">Medium (보통)</option>
@@ -212,7 +212,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                     min="1"
                     value={newEstimatedMinutes}
                     onChange={(e) => setNewEstimatedMinutes(Number(e.target.value))}
-                    className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                    className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                     required
                   />
                 </div>
@@ -232,23 +232,23 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                   value={newSuccessCriteria}
                   onChange={(e) => setNewSuccessCriteria(e.target.value)}
                   placeholder="달성 목표 및 돌아보기에서 도출된 개선점을 입력하세요"
-                  className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                  className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                   required
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2.5 border-t border-neutral-200/60 bg-neutral-50/70 px-6 py-4 backdrop-blur-md dark:border-neutral-800/60 dark:bg-neutral-950/70">
+            <div className="flex items-center justify-end gap-2.5 border-t border-neutral-100 px-6 py-4 dark:border-neutral-800/80">
               <button
                 type="button"
                 onClick={() => setIsNewPlanModalOpen(false)}
-                className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-300/80 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-700 shadow-2xs hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                className="hover-lift active-press cursor-pointer rounded-xl px-4 py-2.5 text-xs font-semibold text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
               >
                 취소
               </button>
               <button
                 type="submit"
-                className="hover-lift active-press cursor-pointer rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/20 hover:bg-indigo-700"
+                className="hover-lift active-press cursor-pointer rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-bold text-white shadow-xs transition-colors hover:bg-indigo-700"
               >
                 새 계획 등록
               </button>
@@ -476,14 +476,14 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
       {isEditModalOpen &&
         createPortal(
           <div
-            className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md duration-200 sm:p-6"
+            className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/40 p-4 backdrop-blur-md duration-200 sm:p-6"
             onClick={(e) => {
               if (e.target === e.currentTarget) setIsEditModalOpen(false);
             }}
           >
-            <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/85 shadow-2xl backdrop-blur-2xl dark:border-neutral-700/60 dark:bg-neutral-900/85 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
+            <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/90 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] backdrop-blur-2xl dark:border-white/10 dark:bg-neutral-900/90 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
               {/* Header */}
-              <div className="flex items-center justify-between border-b border-neutral-200/60 bg-neutral-50/70 px-6 py-4.5 backdrop-blur-md dark:border-neutral-800/60 dark:bg-neutral-950/70">
+              <div className="flex items-center justify-between border-b border-neutral-100 px-6 py-5 dark:border-neutral-800/80">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 shadow-inner dark:border-indigo-500/30 dark:bg-indigo-500/20 dark:text-indigo-400">
                     <Edit3 className="h-5 w-5" />
@@ -502,7 +502,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="hover-lift active-press flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-400 shadow-2xs hover:bg-neutral-100 hover:text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                  className="hover-lift flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                 >
                   <X className="h-4.5 w-4.5" />
                 </button>
@@ -519,7 +519,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                       type="text"
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
-                      className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                      className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                       required
                     />
                   </div>
@@ -533,7 +533,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                         type="date"
                         value={editStartDate}
                         onChange={(e) => setEditStartDate(e.target.value)}
-                        className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                        className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                         required
                       />
                     </div>
@@ -545,7 +545,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                         type="date"
                         value={editEndDate}
                         onChange={(e) => setEditEndDate(e.target.value)}
-                        className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                        className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                         required
                       />
                     </div>
@@ -559,7 +559,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                       <select
                         value={editPriority}
                         onChange={(e) => setEditPriority(e.target.value as Priority)}
-                        className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                        className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                       >
                         <option value="high">High (높음)</option>
                         <option value="medium">Medium (보통)</option>
@@ -575,7 +575,7 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                         min="1"
                         value={editEstimatedMinutes}
                         onChange={(e) => setEditEstimatedMinutes(Number(e.target.value))}
-                        className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                        className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                         required
                       />
                     </div>
@@ -589,13 +589,13 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                       rows={3}
                       value={editSuccessCriteria}
                       onChange={(e) => setEditSuccessCriteria(e.target.value)}
-                      className="w-full rounded-xl border border-neutral-300/80 bg-neutral-50/60 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-700/80 dark:bg-neutral-800/60 dark:text-neutral-100 dark:focus:bg-neutral-800"
+                      className="w-full rounded-xl border border-neutral-200/80 bg-neutral-50/70 px-3.5 py-2.5 text-xs text-neutral-900 shadow-2xs transition-all focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-100 dark:focus:bg-neutral-900"
                       required
                     />
                   </div>
 
-                  <div className="rounded-2xl border border-indigo-500/20 bg-indigo-50/50 p-3 text-xs text-indigo-700 dark:border-indigo-500/30 dark:bg-indigo-950/30 dark:text-indigo-300">
-                    <div className="flex items-center gap-1.5 font-semibold">
+                  <div className="rounded-2xl border border-indigo-500/20 bg-indigo-50/40 p-3.5 text-xs text-indigo-700 dark:border-indigo-500/30 dark:bg-indigo-950/30 dark:text-indigo-300">
+                    <div className="flex items-center gap-1.5 font-bold">
                       <ShieldCheck className="h-4 w-4 shrink-0 text-indigo-500" />
                       <span>스냅샷 보존 안내</span>
                     </div>
@@ -606,17 +606,17 @@ export const PlanSection: React.FC<PlanSectionProps> = ({
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-2.5 border-t border-neutral-200/60 bg-neutral-50/70 px-6 py-4 backdrop-blur-md dark:border-neutral-800/60 dark:bg-neutral-950/70">
+                <div className="flex items-center justify-end gap-2.5 border-t border-neutral-100 px-6 py-4 dark:border-neutral-800/80">
                   <button
                     type="button"
                     onClick={() => setIsEditModalOpen(false)}
-                    className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-300/80 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-700 shadow-2xs hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                    className="hover-lift active-press cursor-pointer rounded-xl px-4 py-2.5 text-xs font-semibold text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
                   >
                     취소
                   </button>
                   <button
                     type="submit"
-                    className="hover-lift active-press cursor-pointer rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-600/20 hover:bg-indigo-700"
+                    className="hover-lift active-press cursor-pointer rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-bold text-white shadow-xs transition-colors hover:bg-indigo-700"
                   >
                     수정 저장 (스냅샷 보존)
                   </button>

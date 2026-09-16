@@ -4,16 +4,6 @@ import { Target, CheckCircle, Sparkles, ArrowRight } from 'lucide-react';
 export const HeroBanner: React.FC = () => {
   return (
     <section className="glass-card relative overflow-hidden rounded-3xl p-6 sm:p-8">
-      {/* Decorative gradient blur orbs */}
-      <div
-        className="pointer-events-none absolute -top-16 -right-16 h-64 w-64 rounded-full bg-indigo-500/15 blur-3xl dark:bg-indigo-400/15"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -bottom-16 left-1/3 h-48 w-48 rounded-full bg-emerald-500/15 blur-2xl dark:bg-emerald-400/15"
-        aria-hidden="true"
-      />
-
       <div className="relative flex flex-col items-center justify-between gap-6 md:flex-row md:items-center">
         {/* Left: Mascot Character Image & Floating Tag */}
         <div className="relative flex shrink-0 items-center justify-center">

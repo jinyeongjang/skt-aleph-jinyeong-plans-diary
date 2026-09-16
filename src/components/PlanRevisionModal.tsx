@@ -19,11 +19,11 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md duration-200 sm:p-6"
+      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/40 p-4 backdrop-blur-md duration-200 sm:p-6"
     >
-      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/85 shadow-2xl backdrop-blur-2xl dark:border-neutral-700/60 dark:bg-neutral-900/85 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
+      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/90 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] backdrop-blur-2xl dark:border-white/10 dark:bg-neutral-900/90 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-200/60 bg-neutral-50/70 px-6 py-4.5 backdrop-blur-md dark:border-neutral-800/60 dark:bg-neutral-950/70">
+        <div className="flex items-center justify-between border-b border-neutral-100 px-6 py-5 dark:border-neutral-800/80">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 shadow-inner dark:border-indigo-500/30 dark:bg-indigo-500/20 dark:text-indigo-400">
               <History className="h-5 w-5" />
@@ -44,7 +44,7 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
           </div>
           <button
             onClick={onClose}
-            className="hover-lift active-press flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-400 shadow-2xs hover:bg-neutral-100 hover:text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+            className="hover-lift flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
           >
             <X className="h-4.5 w-4.5" />
           </button>
@@ -147,10 +147,10 @@ export const PlanRevisionModal: React.FC<PlanRevisionModalProps> = ({ isOpen, on
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end border-t border-neutral-200/60 bg-neutral-50/70 px-6 py-4 backdrop-blur-md dark:border-neutral-800/60 dark:bg-neutral-950/70">
+        <div className="flex justify-end border-t border-neutral-100 px-6 py-4 dark:border-neutral-800/80">
           <button
             onClick={onClose}
-            className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-300/80 bg-white px-5 py-2.5 text-xs font-bold text-neutral-800 shadow-2xs hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+            className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-200 bg-white/80 px-5 py-2.5 text-xs font-bold text-neutral-800 shadow-2xs hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-700"
           >
             닫기
           </button>
