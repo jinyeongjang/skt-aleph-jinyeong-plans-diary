@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   CheckSquare,
-  Square,
+  Check,
   RotateCcw,
   Trash2,
   Edit2,
@@ -335,16 +335,19 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                   <div className="flex min-w-0 flex-1 items-start gap-3.5">
                     <button
                       onClick={() => (todo.status === 'completed' ? onRevertTodo(todo.id) : onCompleteTodo(todo.id))}
-                      className="hover-lift active-press mt-0.5 shrink-0 cursor-pointer transition-transform"
-                      title={todo.status === 'completed' ? '진행 중으로 되돌리기 (T06-C12)' : '완료로 바꾸기 (T06-C11)'}
+                      className="hover-lift active-press group/check mt-0.5 shrink-0 cursor-pointer rounded-xl p-0.5 transition-transform focus:ring-2 focus:ring-emerald-500/30 focus:outline-none"
+                      title={
+                        todo.status === 'completed' ? '진행 중으로 되돌리기 (T06-C12)' : '완료로 표시하기 (T06-C11)'
+                      }
+                      aria-label={todo.status === 'completed' ? '할 일 완료 취소' : '할 일 완료'}
                     >
                       {todo.status === 'completed' ? (
-                        <div className="flex h-6 w-6 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-xs">
-                          <CheckSquare className="h-4 w-4 stroke-[2.5]" />
+                        <div className="flex h-6.5 w-6.5 items-center justify-center rounded-xl border border-emerald-400/40 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/30 transition-all duration-200">
+                          <Check className="h-4 w-4 stroke-[3]" />
                         </div>
                       ) : (
-                        <div className="flex h-6 w-6 items-center justify-center rounded-xl border-2 border-neutral-300 bg-white/80 text-transparent backdrop-blur-xs transition-colors hover:border-emerald-500 hover:text-emerald-500 dark:border-neutral-700 dark:bg-neutral-800/80 dark:hover:border-emerald-400">
-                          <Square className="h-4 w-4" />
+                        <div className="flex h-6.5 w-6.5 items-center justify-center rounded-xl border-2 border-neutral-300/90 bg-white/90 shadow-2xs backdrop-blur-xs transition-all duration-200 group-hover/check:border-emerald-500 group-hover/check:bg-emerald-50/80 group-hover/check:shadow-sm dark:border-neutral-600 dark:bg-neutral-800/90 dark:group-hover/check:border-emerald-400 dark:group-hover/check:bg-emerald-950/50">
+                          <Check className="h-3.5 w-3.5 stroke-[2.5] text-emerald-500 opacity-0 transition-opacity duration-150 group-hover/check:opacity-60 dark:text-emerald-400" />
                         </div>
                       )}
                     </button>
@@ -446,7 +449,7 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     {todo.status === 'completed' ? (
                       <button
                         onClick={() => onRevertTodo(todo.id)}
-                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white/80 text-neutral-500 shadow-2xs backdrop-blur-xs transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900/80 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-neutral-100/80 text-neutral-600 shadow-2xs backdrop-blur-xs transition-all hover:border-neutral-300 hover:bg-neutral-200 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-800/80 dark:text-neutral-300 dark:hover:bg-neutral-700"
                         title="진행 중으로 되돌리기 (T06-C12)"
                       >
                         <RotateCcw className="h-4 w-4" />
@@ -454,10 +457,10 @@ export const TodoSection: React.FC<TodoSectionProps> = ({
                     ) : (
                       <button
                         onClick={() => onCompleteTodo(todo.id)}
-                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-50/80 text-emerald-600 shadow-2xs backdrop-blur-xs transition-colors hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-950/50 dark:text-emerald-400 dark:hover:bg-emerald-900/50"
+                        className="hover-lift active-press flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-50/90 text-emerald-600 shadow-xs backdrop-blur-xs transition-all hover:border-emerald-500/50 hover:bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-900/60"
                         title="완료로 변경 (T06-C11)"
                       >
-                        <CheckSquare className="h-4 w-4" />
+                        <Check className="h-4 w-4 stroke-[2.5]" />
                       </button>
                     )}
 

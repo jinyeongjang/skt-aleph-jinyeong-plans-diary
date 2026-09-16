@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Tag } from 'lucide-react';
 import type { Todo, Priority } from '../types/pds.ts';
 import { getSeoulTodayString } from '../utils/dateUtils.ts';
 
@@ -15,11 +15,14 @@ interface NewTodoModalProps {
   ) => Promise<Todo>;
 }
 
+const DEFAULT_TAGS = '네트워크, 보안, AI';
+const SUGGESTED_TAGS = ['네트워크', '보안', 'AI', '인프라', '리눅스'];
+
 export const NewTodoModal: React.FC<NewTodoModalProps> = ({ isOpen, onClose, planId, onCreateTodo }) => {
   const [content, setContent] = useState('');
   const [dueDate, setDueDate] = useState(getSeoulTodayString());
   const [priority, setPriority] = useState<Priority>('medium');
-  const [tags, setTags] = useState('Frontend, UI');
+  const [tags, setTags] = useState(DEFAULT_TAGS);
   const [estimatedMinutes, setEstimatedMinutes] = useState(60);
 
   if (!isOpen) return null;
@@ -38,13 +41,26 @@ export const NewTodoModal: React.FC<NewTodoModalProps> = ({ isOpen, onClose, pla
       content: content.trim(),
       due_date: dueDate || getSeoulTodayString(),
       priority,
-      tags: parsedTags.length > 0 ? parsedTags : ['일반'],
+      tags: parsedTags.length > 0 ? parsedTags : ['네트워크', '보안', 'AI'],
       estimated_minutes: Number(estimatedMinutes) || 60,
     });
 
     setContent('');
-    setTags('Frontend, UI');
+    setTags(DEFAULT_TAGS);
     onClose();
+  };
+
+  const handleToggleTag = (tagToToggle: string) => {
+    const currentTags = tags
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    if (currentTags.includes(tagToToggle)) {
+      const filtered = currentTags.filter((t) => t !== tagToToggle);
+      setTags(filtered.join(', '));
+    } else {
+      setTags([...currentTags, tagToToggle].join(', '));
+    }
   };
 
   return createPortal(
@@ -99,7 +115,7 @@ export const NewTodoModal: React.FC<NewTodoModalProps> = ({ isOpen, onClose, pla
               </label>
               <input
                 type="text"
-                placeholder="예: Supabase 연결 설정 및 RLS 정책 검증"
+                placeholder="예: 리눅스 방화벽 iptables 규칙 검증 및 포트 포워딩 실습"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="w-full rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-3.5 py-2.5 text-xs text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-none dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:text-neutral-100 dark:focus:bg-neutral-900"
@@ -171,16 +187,44 @@ export const NewTodoModal: React.FC<NewTodoModalProps> = ({ isOpen, onClose, pla
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                  태그 (쉼표 구분) (T06-C16)
-                </label>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                    태그 (쉼표 구분) (T06-C16)
+                  </label>
+                  <span className="text-[10px] text-neutral-400 dark:text-neutral-500">클릭하여 선택</span>
+                </div>
                 <input
                   type="text"
-                  placeholder="DB, Frontend, Test"
+                  placeholder="네트워크, 보안, AI"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
                   className="w-full rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-3.5 py-2.5 text-xs text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-none dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:text-neutral-100 dark:focus:bg-neutral-900"
                 />
+                {/* 빠른 태그 프리셋 칩 */}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {SUGGESTED_TAGS.map((tag) => {
+                    const activeTags = tags
+                      .split(',')
+                      .map((t) => t.trim())
+                      .filter(Boolean);
+                    const isSelected = activeTags.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => handleToggleTag(tag)}
+                        className={`hover-lift active-press inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-semibold transition-all ${
+                          isSelected
+                            ? 'border border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:border-emerald-500/50 dark:bg-emerald-500/20 dark:text-emerald-300'
+                            : 'border border-neutral-200/80 bg-neutral-100/70 text-neutral-600 hover:border-neutral-300 hover:bg-neutral-200/70 dark:border-neutral-800 dark:bg-neutral-800/70 dark:text-neutral-400 dark:hover:bg-neutral-700'
+                        }`}
+                      >
+                        <Tag className="h-2.5 w-2.5 opacity-60" />
+                        <span>#{tag}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">

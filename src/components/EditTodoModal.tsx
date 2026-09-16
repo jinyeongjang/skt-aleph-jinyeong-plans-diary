@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Edit2, X } from 'lucide-react';
+import { Edit2, X, Tag } from 'lucide-react';
 import type { Todo, Priority } from '../types/pds.ts';
 
 interface EditTodoModalProps {
@@ -10,12 +10,27 @@ interface EditTodoModalProps {
   onUpdateTodo: (id: string, data: Partial<Todo>) => Promise<Todo>;
 }
 
+const SUGGESTED_TAGS = ['네트워크', '보안', 'AI', '인프라', '리눅스'];
+
 export const EditTodoModal: React.FC<EditTodoModalProps> = ({ isOpen, onClose, todo, onUpdateTodo }) => {
   const [content, setContent] = useState(todo.content);
   const [dueDate, setDueDate] = useState(todo.due_date);
   const [priority, setPriority] = useState<Priority>(todo.priority);
   const [tags, setTags] = useState(todo.tags.join(', '));
   const [estimatedMinutes, setEstimatedMinutes] = useState(todo.estimated_minutes);
+
+  const handleToggleTag = (tagToToggle: string) => {
+    const currentTags = tags
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    if (currentTags.includes(tagToToggle)) {
+      const filtered = currentTags.filter((t) => t !== tagToToggle);
+      setTags(filtered.join(', '));
+    } else {
+      setTags([...currentTags, tagToToggle].join(', '));
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -173,15 +188,44 @@ export const EditTodoModal: React.FC<EditTodoModalProps> = ({ isOpen, onClose, t
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                  태그 (쉼표 구분) (T06-C16)
-                </label>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                    태그 (쉼표 구분) (T06-C16)
+                  </label>
+                  <span className="text-[10px] text-neutral-400 dark:text-neutral-500">클릭하여 선택</span>
+                </div>
                 <input
                   type="text"
+                  placeholder="네트워크, 보안, AI"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
                   className="w-full rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-3.5 py-2.5 text-xs text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:outline-none dark:border-neutral-800/80 dark:bg-neutral-950/80 dark:text-neutral-100 dark:focus:bg-neutral-900"
                 />
+                {/* 빠른 태그 프리셋 칩 */}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {SUGGESTED_TAGS.map((tag) => {
+                    const activeTags = tags
+                      .split(',')
+                      .map((t) => t.trim())
+                      .filter(Boolean);
+                    const isSelected = activeTags.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => handleToggleTag(tag)}
+                        className={`hover-lift active-press inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-semibold transition-all ${
+                          isSelected
+                            ? 'border border-indigo-500/40 bg-indigo-500/15 text-indigo-700 dark:border-indigo-500/50 dark:bg-indigo-500/20 dark:text-indigo-300'
+                            : 'border border-neutral-200/80 bg-neutral-100/70 text-neutral-600 hover:border-neutral-300 hover:bg-neutral-200/70 dark:border-neutral-800 dark:bg-neutral-800/70 dark:text-neutral-400 dark:hover:bg-neutral-700'
+                        }`}
+                      >
+                        <Tag className="h-2.5 w-2.5 opacity-60" />
+                        <span>#{tag}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
