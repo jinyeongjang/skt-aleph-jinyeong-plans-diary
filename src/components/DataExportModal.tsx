@@ -44,13 +44,13 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md duration-200 sm:p-6"
     >
-      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/85 shadow-2xl backdrop-blur-2xl dark:border-neutral-700/60 dark:bg-neutral-900/85 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50 px-6 py-5 dark:border-neutral-800/80 dark:bg-neutral-950">
+        <div className="flex items-center justify-between border-b border-neutral-200/60 bg-neutral-50/70 px-6 py-4.5 backdrop-blur-md dark:border-neutral-800/60 dark:bg-neutral-950/70">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-blue-500/20 bg-blue-500/10 text-blue-600 shadow-inner dark:bg-blue-500/20 dark:text-blue-400">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-blue-500/20 bg-blue-500/10 text-blue-600 shadow-inner dark:border-blue-500/30 dark:bg-blue-500/20 dark:text-blue-400">
               <FileJson className="h-5 w-5" />
             </div>
             <div>
@@ -58,7 +58,7 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
                 <h2 className="text-base font-bold text-neutral-900 sm:text-lg dark:text-neutral-100">
                   전체 자료 내보내기
                 </h2>
-                <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-[11px] font-bold text-blue-700 dark:text-blue-300">
+                <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-0.5 text-[11px] font-bold text-blue-700 dark:text-blue-300">
                   T06-C36
                 </span>
               </div>
@@ -69,9 +69,9 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
           </div>
           <button
             onClick={onClose}
-            className="hover-lift active-press rounded-xl p-2 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+            className="hover-lift active-press flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-400 shadow-2xs hover:bg-neutral-100 hover:text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4.5 w-4.5" />
           </button>
         </div>
 
@@ -115,8 +115,8 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="flex flex-col items-center justify-between gap-3 border-t border-neutral-200/80 bg-neutral-50/80 px-6 py-4 sm:flex-row dark:border-neutral-800/80 dark:bg-neutral-950/80">
+        {/* Footer actions */}
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-neutral-200/60 bg-neutral-50/70 px-6 py-4 backdrop-blur-md sm:flex-row dark:border-neutral-800/60 dark:bg-neutral-950/70">
           <button
             type="button"
             onClick={() => {
@@ -135,7 +135,7 @@ export const DataExportModal: React.FC<DataExportModalProps> = ({ isOpen, onClos
             <button
               type="button"
               onClick={handleCopy}
-              className="hover-lift active-press inline-flex items-center gap-1.5 rounded-xl bg-neutral-200 px-4 py-2.5 text-xs font-bold text-neutral-800 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+              className="hover-lift active-press inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-neutral-300/80 bg-white px-4 py-2.5 text-xs font-bold text-neutral-800 shadow-2xs hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
             >
               {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
               <span>{copied ? '복사 완료' : '클립보드 복사'}</span>

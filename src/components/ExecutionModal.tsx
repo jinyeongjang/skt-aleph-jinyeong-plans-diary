@@ -119,17 +119,19 @@ export const ExecutionModal: React.FC<ExecutionModalProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+      className="animate-in fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md duration-200 sm:p-6"
     >
-      <div className="relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-neutral-200/90 bg-white shadow-2xl transition-all dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/85 shadow-2xl backdrop-blur-2xl dark:border-neutral-700/60 dark:bg-neutral-900/85 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-200/80 bg-neutral-50 px-6 py-4.5 dark:border-neutral-800/80 dark:bg-neutral-950">
+        <div className="flex items-center justify-between border-b border-neutral-200/60 bg-neutral-50/70 px-6 py-4.5 backdrop-blur-md dark:border-neutral-800/60 dark:bg-neutral-950/70">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 shadow-inner dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 shadow-inner dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
               <Play className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">실행 기록 (카드 3 — Do)</h2>
+              <h2 className="text-base font-bold text-neutral-900 sm:text-lg dark:text-neutral-100">
+                실행 기록 (카드 3 — Do)
+              </h2>
               <p className="text-xs text-neutral-500 dark:text-neutral-400">
                 실제 시작·종료 시각과 막힌 이유를 기록하고 계획의 원본 예상시간을 보존합니다.
               </p>
@@ -137,9 +139,9 @@ export const ExecutionModal: React.FC<ExecutionModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-200/80 bg-white p-1.5 text-neutral-400 shadow-2xs transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+            className="hover-lift active-press flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl border border-neutral-200/80 bg-white text-neutral-400 shadow-2xs hover:bg-neutral-100 hover:text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4.5 w-4.5" />
           </button>
         </div>
 
@@ -291,7 +293,7 @@ export const ExecutionModal: React.FC<ExecutionModalProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="hover-lift active-press cursor-pointer rounded-xl bg-neutral-100 px-4 py-2.5 text-xs font-semibold text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                  className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-300/80 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-700 shadow-2xs hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
                 >
                   취소
                 </button>

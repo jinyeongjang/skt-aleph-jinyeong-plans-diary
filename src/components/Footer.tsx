@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
         </div>
         <div className="flex items-center gap-3 text-xs font-semibold">
           <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
             10/10 PASS 검증 완비
           </span>
           <span className="text-neutral-400">•</span>

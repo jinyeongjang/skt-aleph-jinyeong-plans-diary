@@ -112,10 +112,7 @@ export const FixedTestsSection: React.FC = () => {
   const passRate = Math.round((passedCount / totalCount) * 100);
 
   return (
-    <section
-      id="fixed-tests"
-      className="scroll-mt-24 rounded-3xl border border-neutral-200/80 bg-white/80 p-6 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.04)] backdrop-blur-2xl transition-all sm:p-7 dark:border-neutral-800/80 dark:bg-neutral-900/80 dark:shadow-[0_10px_35px_-5px_rgba(0,0,0,0.3)]"
-    >
+    <section id="fixed-tests" className="glass-card scroll-mt-24 rounded-3xl p-6 sm:p-7">
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 border-b border-neutral-200/80 pb-5 md:flex-row md:items-center dark:border-neutral-800/80">
         <div className="flex items-center gap-3.5">
@@ -127,7 +124,7 @@ export const FixedTestsSection: React.FC = () => {
               <span className="text-xs font-bold tracking-wider text-indigo-600 uppercase dark:text-indigo-400">
                 품질 검증 자동화
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
+              <span className="glass-pill inline-flex items-center gap-1 rounded-full border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 10/10 PASS 검증 완비
               </span>
@@ -164,7 +161,7 @@ export const FixedTestsSection: React.FC = () => {
 
           <button
             onClick={expandedIds.size === FIXED_TEST_SPECS.length ? collapseAll : expandAll}
-            className="hover-lift active-press cursor-pointer rounded-xl border border-neutral-200/80 bg-neutral-100/80 px-3.5 py-2.5 text-xs font-semibold text-neutral-700 shadow-2xs backdrop-blur-xs transition-colors hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-800/80 dark:text-neutral-300 dark:hover:bg-neutral-700"
+            className="glass-pill hover-lift active-press cursor-pointer rounded-xl px-3.5 py-2.5 text-xs font-semibold text-neutral-700 shadow-2xs transition-colors hover:bg-neutral-200/60 dark:text-neutral-300 dark:hover:bg-neutral-700/60"
           >
             {expandedIds.size === FIXED_TEST_SPECS.length ? '전체 접기' : '전체 상세 펼치기'}
           </button>
@@ -173,41 +170,35 @@ export const FixedTestsSection: React.FC = () => {
 
       {/* Progress Bar (During Run) */}
       {isRunning && progress && (
-        <div className="animate-fade-in mt-4 rounded-2xl border border-indigo-500/25 bg-indigo-500/8 p-4 shadow-2xs backdrop-blur-md dark:border-indigo-400/25 dark:bg-indigo-500/10">
+        <div className="glass-panel mt-4 rounded-2xl border-indigo-500/25 bg-indigo-500/10 p-4 shadow-2xs dark:border-indigo-400/25 dark:bg-indigo-500/10">
           <div className="mb-2 flex items-center justify-between text-xs">
             <span className="font-semibold text-indigo-950 dark:text-indigo-100">
               [{progress.current} / {progress.total}] {progress.currentName}
             </span>
-            <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{progress.percent}%</span>
+            <span className="font-mono font-bold text-indigo-700 dark:text-indigo-300">{progress.percent}%</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-indigo-200/60 dark:bg-indigo-900/60">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
             <div
-              className="h-full rounded-full bg-indigo-600 transition-all duration-150"
+              className="h-full rounded-full bg-indigo-600 transition-all duration-200 dark:bg-indigo-500"
               style={{ width: `${progress.percent}%` }}
             />
           </div>
         </div>
       )}
 
-      {/* Summary Stat Cards */}
-      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/70 p-4 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/50">
-          <span className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">총 검사 수</span>
-          <strong className="mt-1 block text-xl font-black text-neutral-900 dark:text-neutral-100">
-            {totalCount}건
-          </strong>
-        </div>
-        <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/8 p-4 shadow-2xs dark:border-emerald-500/20 dark:bg-emerald-500/10">
+      {/* Stats Cards */}
+      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="glass-panel rounded-2xl border-emerald-500/25 bg-emerald-500/8 p-4 shadow-2xs dark:border-emerald-500/20 dark:bg-emerald-500/10">
           <span className="block text-[11px] font-medium text-emerald-700 dark:text-emerald-300">통과 검사</span>
           <strong className="mt-1 block text-xl font-black text-emerald-700 dark:text-emerald-300">
             {passedCount} / {totalCount} PASS
           </strong>
         </div>
-        <div className="rounded-2xl border border-indigo-500/25 bg-indigo-500/8 p-4 shadow-2xs dark:border-indigo-500/20 dark:bg-indigo-500/10">
+        <div className="glass-panel rounded-2xl border-indigo-500/25 bg-indigo-500/8 p-4 shadow-2xs dark:border-indigo-500/20 dark:bg-indigo-500/10">
           <span className="block text-[11px] font-medium text-indigo-700 dark:text-indigo-300">통과율</span>
           <strong className="mt-1 block text-xl font-black text-indigo-700 dark:text-indigo-300">{passRate}%</strong>
         </div>
-        <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/70 p-4 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/50">
+        <div className="glass-panel rounded-2xl p-4 shadow-2xs">
           <span className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">최근 실행 결과</span>
           <span className="mt-1 block font-mono text-xs font-bold text-neutral-700 dark:text-neutral-300">
             {lastRunTime ? `${lastRunTime} (${totalDurationMs}ms)` : '10/10 PASS 완료'}
@@ -226,11 +217,11 @@ export const FixedTestsSection: React.FC = () => {
           return (
             <div
               key={spec.id}
-              className={`hover-lift rounded-2xl border transition-all ${
+              className={`glass-panel hover-lift rounded-2xl transition-all ${
                 isThisRunning
                   ? 'border-indigo-500 bg-indigo-50/40 dark:bg-indigo-950/30'
                   : isPassed
-                    ? 'border-neutral-200/80 bg-white shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-900/70'
+                    ? 'hover:border-indigo-500/30'
                     : 'border-rose-300 bg-rose-50/40 dark:border-rose-800 dark:bg-rose-950/20'
               }`}
             >

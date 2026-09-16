@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Header } from './components/Header.tsx';
 import { NoticeBanner } from './components/NoticeBanner.tsx';
 import { HeroBanner } from './components/HeroBanner.tsx';
+import { PlanSelector } from './components/PlanSelector.tsx';
 import { PlanSection } from './components/PlanSection.tsx';
 import { TodoSection } from './components/TodoSection.tsx';
 import { SeeDashboardSection } from './components/SeeDashboardSection.tsx';
@@ -141,6 +142,7 @@ export const App: React.FC = () => {
     await loadPlans();
     setSelectedPlanId(created.id);
     await loadPlanDetails(created.id);
+    return created;
   };
 
   // 핸들러: 할 일 생성 (T06-C09)
@@ -152,6 +154,9 @@ export const App: React.FC = () => {
     const created = await createTodo(todoData);
     if (currentPlan) {
       await loadPlanDetails(currentPlan.id);
+    }
+    if (filterMode === 'completed' || filterMode === 'blocked') {
+      setFilterMode('all');
     }
     return created;
   };
@@ -236,10 +241,10 @@ export const App: React.FC = () => {
     <div className="relative min-h-screen overflow-x-clip bg-neutral-50 font-sans text-neutral-900 transition-colors dark:bg-neutral-950 dark:text-neutral-100">
       {/* 0. Ambient Glass Background Lighting */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-indigo-500/10 blur-[100px] dark:bg-indigo-600/10" />
-        <div className="absolute top-1/4 -right-40 h-125 w-125 rounded-full bg-emerald-500/10 blur-[130px] dark:bg-emerald-500/[0.07]" />
-        <div className="absolute top-2/3 -left-32 h-112.5 w-112.5 rounded-full bg-purple-500/10 blur-[120px] dark:bg-purple-500/6" />
-        <div className="absolute right-1/4 -bottom-40 h-137.5 w-137.5 rounded-full bg-neutral-400/10 blur-[140px] dark:bg-neutral-600/10" />
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-indigo-500/15 blur-[100px] dark:bg-indigo-600/15" />
+        <div className="absolute top-1/4 -right-40 h-125 w-125 rounded-full bg-emerald-500/15 blur-[130px] dark:bg-emerald-500/[0.12]" />
+        <div className="absolute top-2/3 -left-32 h-112.5 w-112.5 rounded-full bg-purple-500/15 blur-[120px] dark:bg-purple-500/[0.12]" />
+        <div className="absolute right-1/4 -bottom-40 h-137.5 w-137.5 rounded-full bg-sky-400/15 blur-[140px] dark:bg-sky-600/10" />
       </div>
 
       {/* 1. 상단 고정 헤더 */}
@@ -258,28 +263,21 @@ export const App: React.FC = () => {
         {/* 상단 플랜두씨 마스코트 히어로 배너 */}
         <HeroBanner />
 
-        {/* 복수 계획 전환 탭 (계획이 여러 개일 경우) */}
-        {plans.length > 1 && (
-          <div className="flex items-center gap-2.5 overflow-x-auto rounded-2xl border border-neutral-200/80 bg-white/75 p-1.5 shadow-2xs backdrop-blur-xl dark:border-neutral-800/80 dark:bg-neutral-900/75">
-            <span className="shrink-0 px-2.5 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
-              내 계획 선택:
-            </span>
-            <div className="flex items-center gap-1.5 overflow-x-auto">
-              {plans.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => setSelectedPlanId(p.id)}
-                  className={`hover-lift active-press cursor-pointer rounded-xl px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-all ${
-                    currentPlan?.id === p.id
-                      ? 'bg-indigo-600 text-white shadow-xs'
-                      : 'border border-transparent text-neutral-600 hover:border-neutral-200/60 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:border-neutral-800 dark:hover:bg-neutral-800 dark:hover:text-neutral-200'
-                  }`}
-                >
-                  {p.title}
-                </button>
-              ))}
-            </div>
-          </div>
+        {/* 복수/단일 계획 전환 및 탐색 바 */}
+        {plans.length > 0 && (
+          <PlanSelector
+            plans={plans}
+            selectedPlanId={currentPlan?.id || null}
+            onSelectPlan={(id) => setSelectedPlanId(id)}
+            onOpenNewPlan={() => {
+              const planSection = document.getElementById('plan-section');
+              if (planSection) {
+                planSection.scrollIntoView({ behavior: 'smooth' });
+                const addBtn = planSection.querySelector('button[data-action="new-plan"]') as HTMLButtonElement;
+                if (addBtn) addBtn.click();
+              }
+            }}
+          />
         )}
 
         {/* 카드 1 — Plan (계획 세우기 & 원본 스냅샷 보존) */}

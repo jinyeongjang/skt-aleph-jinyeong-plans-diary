@@ -19,11 +19,11 @@ import {
 import { getSeoulTodayString } from '../utils/dateUtils.ts';
 
 const STORAGE_KEYS = {
-  PLANS: 'pds_plans_net_sec_v1',
-  REVISIONS: 'pds_plan_revisions_net_sec_v1',
-  TODOS: 'pds_todos_net_sec_v1',
-  LOGS: 'pds_execution_logs_net_sec_v1',
-  REVIEWS: 'pds_reviews_net_sec_v1',
+  PLANS: 'pds_plans_net_sec_v2',
+  REVISIONS: 'pds_plan_revisions_net_sec_v2',
+  TODOS: 'pds_todos_net_sec_v2',
+  LOGS: 'pds_execution_logs_net_sec_v2',
+  REVIEWS: 'pds_reviews_net_sec_v2',
 };
 
 // ============================================================================
@@ -78,18 +78,26 @@ initStorageIfEmpty();
 // Plan Service (카드 1 - T06-C04 ~ T06-C08)
 // ============================================================================
 export async function getPlans(): Promise<Plan[]> {
+  const localPlans = getLocalItem<Plan[]>(STORAGE_KEYS.PLANS, memoryStore.plans);
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase.from('plans').select('*').order('created_at', { ascending: false });
-      if (!error && data && data.length > 0) {
-        setLocalItem(STORAGE_KEYS.PLANS, data);
-        return data as Plan[];
+      if (!error && data) {
+        const map = new Map<string, Plan>();
+        (data as Plan[]).forEach((p) => map.set(p.id, p));
+        localPlans.forEach((p) => {
+          if (!map.has(p.id)) map.set(p.id, p);
+        });
+        const merged = Array.from(map.values());
+        setLocalItem(STORAGE_KEYS.PLANS, merged);
+        memoryStore.plans = merged;
+        return merged;
       }
     } catch (err) {
       console.warn('Supabase getPlans fallback to local:', err);
     }
   }
-  return getLocalItem<Plan[]>(STORAGE_KEYS.PLANS, memoryStore.plans);
+  return localPlans;
 }
 
 export async function getPlanById(id: string): Promise<Plan | null> {
@@ -223,19 +231,25 @@ export async function getPlanRevisions(planId: string): Promise<PlanRevision[]> 
 // Todo Service (카드 2 - T06-C09 ~ T06-C20)
 // ============================================================================
 export async function getTodos(planId: string): Promise<Todo[]> {
+  const allTodos = getLocalItem<Todo[]>(STORAGE_KEYS.TODOS, memoryStore.todos);
+  const localFiltered = allTodos.filter((t) => t.plan_id === planId && !t.is_deleted);
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase.from('todos').select('*').eq('plan_id', planId).eq('is_deleted', false);
       if (!error && data) {
-        return sortTodos(data as Todo[]);
+        const map = new Map<string, Todo>();
+        (data as Todo[]).forEach((t) => map.set(t.id, t));
+        localFiltered.forEach((t) => {
+          if (!map.has(t.id)) map.set(t.id, t);
+        });
+        const merged = Array.from(map.values());
+        return sortTodos(merged);
       }
     } catch (err) {
       console.warn('Supabase getTodos fallback:', err);
     }
   }
-  const allTodos = getLocalItem<Todo[]>(STORAGE_KEYS.TODOS, memoryStore.todos);
-  const filtered = allTodos.filter((t) => t.plan_id === planId && !t.is_deleted);
-  return sortTodos(filtered);
+  return sortTodos(localFiltered);
 }
 
 /**

@@ -57,10 +57,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
   const isOverTime = metrics.varianceMinutes > 0;
 
   return (
-    <section
-      id="see-section"
-      className="rounded-3xl border border-neutral-200/80 bg-white/80 p-6 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.04)] backdrop-blur-2xl transition-all sm:p-7 dark:border-neutral-800/80 dark:bg-neutral-900/80 dark:shadow-[0_10px_35px_-5px_rgba(0,0,0,0.3)]"
-    >
+    <section id="see-section" className="glass-card rounded-3xl p-6 sm:p-7">
       {/* Section Header */}
       <div className="flex flex-col justify-between gap-4 border-b border-neutral-200/80 pb-5 sm:flex-row sm:items-center dark:border-neutral-800/80">
         <div className="flex items-center gap-3.5">
@@ -72,7 +69,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
               <span className="text-xs font-bold tracking-wider text-purple-600 uppercase dark:text-purple-400">
                 카드 4 — See (돌아보기, 그리고 다음 계획으로)
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
+              <span className="glass-pill inline-flex items-center gap-1 rounded-full border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
                 <CheckCircle2 className="h-3 w-3" /> T06-C28~C33, T06-C83 충족
               </span>
             </div>
@@ -85,7 +82,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
           </div>
         </div>
 
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/20 bg-purple-500/10 px-3.5 py-1 text-xs font-semibold text-purple-700 shadow-2xs backdrop-blur-xs dark:border-purple-500/30 dark:bg-purple-500/20 dark:text-purple-300">
+        <div className="glass-pill inline-flex items-center gap-1.5 rounded-full border-purple-500/30 bg-purple-500/15 px-3.5 py-1 text-xs font-semibold text-purple-700 shadow-2xs dark:border-purple-500/30 dark:bg-purple-500/25 dark:text-purple-300">
           <MousePointerClick className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
           <span>T06-C83 인터랙티브 드릴다운</span>
         </div>
@@ -97,7 +94,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
         <button
           type="button"
           onClick={() => scrollToTodosWithFilter('all')}
-          className="hover-lift active-press group cursor-pointer rounded-2xl border border-neutral-200/80 bg-neutral-50/70 p-4.5 text-left shadow-2xs transition-all hover:border-neutral-300 hover:bg-neutral-50/90 dark:border-neutral-800/80 dark:bg-neutral-950/60 dark:hover:border-neutral-700"
+          className="glass-panel hover-lift active-press group cursor-pointer rounded-2xl p-4.5 text-left transition-all hover:border-indigo-500/30"
           title="클릭하여 전체 할 일 목록 보기"
         >
           <div className="mb-2 flex items-center justify-between text-xs font-medium text-neutral-500 dark:text-neutral-400">
@@ -119,7 +116,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
         <button
           type="button"
           onClick={() => scrollToTodosWithFilter('completed')}
-          className="hover-lift active-press group cursor-pointer rounded-2xl border border-emerald-500/25 bg-emerald-500/8 p-4.5 text-left shadow-2xs transition-all hover:border-emerald-500/40 hover:bg-emerald-500/15 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:hover:border-emerald-500/35"
+          className="glass-panel hover-lift active-press group cursor-pointer rounded-2xl border-emerald-500/25 bg-emerald-500/8 p-4.5 text-left transition-all hover:border-emerald-500/40 hover:bg-emerald-500/15 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:hover:border-emerald-500/35"
           title="클릭하여 완료된 할 일 보기"
         >
           <div className="mb-2 flex items-center justify-between text-xs font-medium text-emerald-700 dark:text-emerald-300">
@@ -141,7 +138,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
         <button
           type="button"
           onClick={() => scrollToTodosWithFilter('delayed')}
-          className="hover-lift active-press group cursor-pointer rounded-2xl border border-rose-500/25 bg-rose-500/8 p-4.5 text-left shadow-2xs transition-all hover:border-rose-500/40 hover:bg-rose-500/15 dark:border-rose-500/20 dark:bg-rose-500/10 dark:hover:border-rose-500/35"
+          className="glass-panel hover-lift active-press group cursor-pointer rounded-2xl border-rose-500/25 bg-rose-500/8 p-4.5 text-left transition-all hover:border-rose-500/40 hover:bg-rose-500/15 dark:border-rose-500/20 dark:bg-rose-500/10 dark:hover:border-rose-500/35"
           title="클릭하여 마감 지연 건 보기"
         >
           <div className="mb-2 flex items-center justify-between text-xs font-medium text-rose-700 dark:text-rose-300">
@@ -163,7 +160,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
         <button
           type="button"
           onClick={() => scrollToTodosWithFilter('blocked')}
-          className="hover-lift active-press group cursor-pointer rounded-2xl border border-amber-500/25 bg-amber-500/8 p-4.5 text-left shadow-2xs transition-all hover:border-amber-500/40 hover:bg-amber-500/15 dark:border-amber-500/20 dark:bg-amber-500/10 dark:hover:border-amber-500/35"
+          className="glass-panel hover-lift active-press group cursor-pointer rounded-2xl border-amber-500/25 bg-amber-500/8 p-4.5 text-left transition-all hover:border-amber-500/40 hover:bg-amber-500/15 dark:border-amber-500/20 dark:bg-amber-500/10 dark:hover:border-amber-500/35"
           title="클릭하여 막힌 이유가 있는 건 보기"
         >
           <div className="mb-2 flex items-center justify-between text-xs font-medium text-amber-700 dark:text-amber-300">
@@ -183,10 +180,10 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
       </div>
 
       {/* T06-C32: 예상 시간 vs 실제 시간 차이 분석 패널 */}
-      <div className="mt-5 rounded-2xl border border-neutral-200/80 bg-neutral-50/70 p-5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/40">
+      <div className="glass-panel mt-5 rounded-2xl p-5">
         <div className="mb-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
+            <div className="glass-pill flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
               <Clock className="h-3.5 w-3.5" />
             </div>
             <h3 className="text-sm font-bold text-neutral-900 dark:text-neutral-100">시간 오차 분석 (T06-C32)</h3>
@@ -195,7 +192,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
         </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div className="rounded-xl border border-neutral-200/80 bg-white p-3.5 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="glass-panel rounded-xl p-3.5">
             <span className="mb-1 block text-xs font-medium text-neutral-500">총 예상 시간 (계획)</span>
             <span className="text-base font-bold text-neutral-900 dark:text-neutral-100">
               {formatMinutes(metrics.totalEstimatedMinutes)} ({metrics.totalEstimatedMinutes}분)
