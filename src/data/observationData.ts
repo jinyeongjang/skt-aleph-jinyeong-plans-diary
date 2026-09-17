@@ -32,11 +32,11 @@ export const INITIAL_OBSERVATION_RULE: ObservationRule = {
   // T07-C09: 변경 후 계획 규칙 (3일차~5일차)
   changed_plan_rule: '네트워크 환경 설정 및 패킷 디버깅 트러블슈팅을 감안하여 기본 예상 시간에 20% 안전 버퍼 추가 반영',
   // T07-C10: 계획 규칙 바꾼 시각 (2일차 뒤 ~ 3일차 앞)
-  rule_changed_at: '2026-09-16T22:30:00+09:00',
+  rule_changed_at: '2026-09-18T22:30:00+09:00',
   // T07-C11: 계획 규칙 바꾼 이유
   rule_change_reason:
     '1일차(+10분) 및 2일차(+15분) 실습 시 예상치 못한 패킷 캡처 환경 지연이 발생하여 3일차부터 20% 버퍼 시간을 선제 반영하기로 결정함',
-  created_at: '2026-09-15T08:00:00+09:00',
+  created_at: '2026-09-17T08:00:00+09:00',
 };
 
 export interface DayObservationEntry {
@@ -56,7 +56,7 @@ export interface DayObservationEntry {
 export const FIVE_DAYS_OBSERVATION_DATA: DayObservationEntry[] = [
   {
     dayNumber: 1,
-    date: '2026-09-15',
+    date: '2026-09-17',
     taskName: 'TCP/IP 4계층 프로토콜 분석 및 Wireshark 패킷 캡처 실습',
     estimatedMinutes: 90,
     actualMinutes: 100,
@@ -66,7 +66,7 @@ export const FIVE_DAYS_OBSERVATION_DATA: DayObservationEntry[] = [
   },
   {
     dayNumber: 2,
-    date: '2026-09-16',
+    date: '2026-09-18',
     taskName: 'DNS 계층 구조 및 캐싱 메커니즘 쿼리 분석',
     estimatedMinutes: 60,
     actualMinutes: 75,
@@ -76,7 +76,7 @@ export const FIVE_DAYS_OBSERVATION_DATA: DayObservationEntry[] = [
   },
   {
     dayNumber: 3,
-    date: '2026-09-17',
+    date: '2026-09-19',
     taskName: 'L2/L3 스위치 기반 VLAN 분할 및 IP 라우팅 망구성 [버퍼20%]',
     estimatedMinutes: 110,
     actualMinutes: 115,
@@ -86,7 +86,7 @@ export const FIVE_DAYS_OBSERVATION_DATA: DayObservationEntry[] = [
   },
   {
     dayNumber: 4,
-    date: '2026-09-18',
+    date: '2026-09-20',
     taskName: '리눅스(Ubuntu) iptables 및 ufw 방화벽 보안 정책 수립 [버퍼20%]',
     estimatedMinutes: 90,
     actualMinutes: 85,
@@ -96,7 +96,7 @@ export const FIVE_DAYS_OBSERVATION_DATA: DayObservationEntry[] = [
   },
   {
     dayNumber: 5,
-    date: '2026-09-19',
+    date: '2026-09-21',
     taskName: '제로 트러스트(Zero Trust) 엔드포인트 접근 제어 및 네트워크 감사 [버퍼20%]',
     estimatedMinutes: 90,
     actualMinutes: 90,

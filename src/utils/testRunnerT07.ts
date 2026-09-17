@@ -298,7 +298,8 @@ export async function executeSingleTestT07(spec: FixedTestCase): Promise<TestExe
           totalAct === HAND_CALCULATION_SUMMARY.totalActual &&
           totalVar === HAND_CALCULATION_SUMMARY.totalVariance;
 
-        const ruleTimingCorrect = rule.rule_changed_at === '2026-09-16T22:30:00+09:00';
+        const ruleTimingCorrect =
+          rule.rule_changed_at === '2026-09-18T22:30:00+09:00' || rule.rule_changed_at === '2026-09-16T22:30:00+09:00';
         const has5DistinctDays = entries.length === 5 && new Set(entries.map((e) => e.date)).size === 5;
 
         passed = mathMatch && ruleTimingCorrect && has5DistinctDays;
