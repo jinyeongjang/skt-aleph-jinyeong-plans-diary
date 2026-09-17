@@ -70,7 +70,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
     >
       {/* 상단 은은한 림라이트 (유리 반사 효과) */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
         aria-hidden="true"
       />
 
@@ -85,9 +85,9 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
       />
 
       {/* Section Header */}
-      <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-neutral-200/70 pb-6 sm:flex-row sm:items-center dark:border-white/[0.08]">
+      <div className="relative z-10 flex flex-col justify-between gap-4 border-b border-neutral-200/70 pb-6 sm:flex-row sm:items-center dark:border-white/8">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-500/20 via-purple-600/10 to-fuchsia-500/15 text-purple-600 shadow-inner backdrop-blur-md dark:border-purple-400/30 dark:text-purple-400">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-purple-500/20 bg-linear-to-br from-purple-500/20 via-purple-600/10 to-fuchsia-500/15 text-purple-600 shadow-inner backdrop-blur-md dark:border-purple-400/30 dark:text-purple-400">
             <PieChart className="h-6 w-6" />
           </div>
           <div>
@@ -120,7 +120,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
         <button
           type="button"
           onClick={() => scrollToTodosWithFilter('all')}
-          className="hover-lift active-press group dark:bg-neutral-850/60 cursor-pointer rounded-2xl border border-white/80 bg-white/60 p-4.5 text-left shadow-xs backdrop-blur-md transition-all hover:border-indigo-400/50 hover:bg-white/85 hover:shadow-md dark:border-white/10 dark:hover:border-indigo-500/40 dark:hover:bg-neutral-800/80"
+          className="hover-lift active-press group cursor-pointer rounded-2xl border border-white/80 bg-white/60 p-4.5 text-left shadow-xs backdrop-blur-md transition-all hover:border-indigo-400/50 hover:bg-white/85 hover:shadow-md dark:border-white/10 dark:bg-neutral-900/60 dark:hover:border-indigo-500/40 dark:hover:bg-neutral-800/80"
           title="클릭하여 전체 할 일 목록 보기"
         >
           <div className="mb-2 flex items-center justify-between text-xs font-medium text-neutral-500 dark:text-neutral-400">
@@ -214,7 +214,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
       </div>
 
       {/* T06-C32: 예상 시간 vs 실제 시간 차이 분석 패널 */}
-      <div className="dark:bg-neutral-850/60 relative z-10 mt-5 rounded-2xl border border-white/80 bg-white/60 p-5 shadow-xs backdrop-blur-md dark:border-white/10">
+      <div className="relative z-10 mt-5 rounded-2xl border border-white/80 bg-white/60 p-5 shadow-xs backdrop-blur-md dark:border-white/10 dark:bg-neutral-900/60">
         <div className="mb-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-600 dark:bg-indigo-400/20 dark:text-indigo-300">
@@ -314,7 +314,7 @@ export const SeeDashboardSection: React.FC<SeeDashboardSectionProps> = ({
             <button
               type="submit"
               disabled={isSaving}
-              className="hover-lift active-press group inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-md shadow-purple-600/25 transition-all hover:from-purple-500 hover:to-indigo-500 disabled:opacity-50 sm:w-auto"
+              className="hover-lift active-press group inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-2xl bg-linear-to-r from-purple-600 to-indigo-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-md shadow-purple-600/25 transition-all hover:from-purple-500 hover:to-indigo-500 disabled:opacity-50 sm:w-auto"
             >
               <Save className="h-3.5 w-3.5" />
               <span>고칠 점 저장 후 다음 계획으로 넘기기 (T06-C33)</span>

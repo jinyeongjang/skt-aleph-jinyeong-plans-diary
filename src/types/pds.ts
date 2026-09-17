@@ -8,6 +8,7 @@ export type TodoStatus = 'pending' | 'completed';
 
 export interface Plan {
   id: string;
+  user_id?: string;
   title: string;
   start_date: string; // YYYY-MM-DD
   end_date: string; // YYYY-MM-DD
@@ -21,6 +22,7 @@ export interface Plan {
 export interface PlanRevision {
   id: string;
   plan_id: string;
+  user_id?: string;
   revision_number: number;
   title: string;
   start_date: string;
@@ -34,6 +36,7 @@ export interface PlanRevision {
 export interface Todo {
   id: string;
   plan_id: string;
+  user_id?: string;
   content: string;
   status: TodoStatus;
   due_date: string; // YYYY-MM-DD
@@ -49,6 +52,7 @@ export interface Todo {
 export interface ExecutionLog {
   id: string;
   todo_id: string;
+  user_id?: string;
   start_time: string; // ISO 8601
   end_time: string; // ISO 8601
   actual_minutes: number;
@@ -60,6 +64,7 @@ export interface ExecutionLog {
 export interface Review {
   id: string;
   plan_id: string;
+  user_id?: string;
   next_action_note: string;
   created_at: string;
 }

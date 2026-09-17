@@ -13,7 +13,6 @@ import {
   UserCheck,
   ShieldAlert,
   Database,
-  ExternalLink,
 } from 'lucide-react';
 
 interface VerificationGuideModalProps {
@@ -27,10 +26,19 @@ export const VerificationGuideModal: React.FC<VerificationGuideModalProps> = ({ 
 
   if (!isOpen) return null;
 
-  const sqlCode = `-- Supabase SQL Editor에서 실행
--- contracts/pds-schema-v2.json 명세 준수
+  const sqlCode = `-- 과제 7 Supabase SQL Editor 실행 DDL (RLS 및 users 연동)
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  salt TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 CREATE TABLE IF NOT EXISTS plans (
   id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
@@ -44,6 +52,7 @@ CREATE TABLE IF NOT EXISTS plans (
 CREATE TABLE IF NOT EXISTS plan_revisions (
   id TEXT PRIMARY KEY,
   plan_id TEXT NOT NULL REFERENCES plans(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   revision_number INTEGER NOT NULL,
   title TEXT NOT NULL,
   start_date DATE NOT NULL,
@@ -57,6 +66,7 @@ CREATE TABLE IF NOT EXISTS plan_revisions (
 CREATE TABLE IF NOT EXISTS todos (
   id TEXT PRIMARY KEY,
   plan_id TEXT NOT NULL REFERENCES plans(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed')),
   due_date DATE NOT NULL,
@@ -72,6 +82,7 @@ CREATE TABLE IF NOT EXISTS todos (
 CREATE TABLE IF NOT EXISTS execution_logs (
   id TEXT PRIMARY KEY,
   todo_id TEXT NOT NULL REFERENCES todos(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   start_time TIMESTAMPTZ NOT NULL,
   end_time TIMESTAMPTZ NOT NULL,
   actual_minutes INTEGER NOT NULL,
@@ -83,21 +94,21 @@ CREATE TABLE IF NOT EXISTS execution_logs (
 CREATE TABLE IF NOT EXISTS reviews (
   id TEXT PRIMARY KEY,
   plan_id TEXT NOT NULL REFERENCES plans(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   next_action_note TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE plans ENABLE ROW LEVEL SECURITY;
-ALTER TABLE plan_revisions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE todos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE execution_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Allow public all on plans" ON plans FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow public all on plan_revisions" ON plan_revisions FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow public all on todos" ON todos FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow public all on execution_logs" ON execution_logs FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH CHECK (true);`;
+CREATE POLICY "User isolation on plans" ON plans FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "User isolation on todos" ON todos FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "User isolation on execution_logs" ON execution_logs FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "User isolation on reviews" ON reviews FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);`;
 
   const handleCopySql = async () => {
     await navigator.clipboard.writeText(sqlCode);
@@ -114,7 +125,10 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
     >
       <div className="relative flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
         {/* Top rim light */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/80 to-transparent dark:via-neutral-700/50" />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/80 to-transparent dark:via-white/20"
+          aria-hidden="true"
+        />
 
         {/* Header */}
         <div className="relative flex items-center justify-between border-b border-neutral-200/80 px-6 py-5 dark:border-neutral-800/80">
@@ -125,14 +139,14 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-bold tracking-tight text-neutral-900 sm:text-lg dark:text-neutral-100">
-                  과제 6 검증 가이드 및 평가 기준
+                  과제 7 확인 방법 & AI 판단 가이드
                 </h2>
                 <span className="rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-0.5 text-[10px] font-bold text-indigo-700 dark:text-indigo-300">
-                  T06-C59 • C60
+                  T07-C39 • C40
                 </span>
               </div>
               <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                제출 규격(T06-C59, T06-C60) 및 Supabase DB 연동 절차
+                제출 규격(T07-C39 짧은 확인 방법 4줄, T07-C40 AI 판단 3줄)
               </p>
             </div>
           </div>
@@ -155,7 +169,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
               }`}
             >
-              확인 방법 4줄 (C59)
+              확인 방법 4줄 (T07-C39)
             </button>
             <button
               onClick={() => setActiveTab('3lines')}
@@ -165,7 +179,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
               }`}
             >
-              AI와 내 판단 3줄 (C60)
+              AI와 내 판단 3줄 (T07-C40)
             </button>
             <button
               onClick={() => setActiveTab('supabase')}
@@ -182,7 +196,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
 
         {/* Tab Content */}
         <div className="custom-scrollbar space-y-4 overflow-y-auto p-6">
-          {/* Tab 1: 짧은 확인 방법 4줄 (T06-C59) */}
+          {/* Tab 1: 짧은 확인 방법 4줄 (T07-C39) */}
           {activeTab === '4lines' && (
             <div className="space-y-3.5">
               <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-4.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
@@ -193,7 +207,7 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">① 어디로 가나요</span>
                 </div>
                 <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                  배포된 웹 URL(새 시크릿 창)로 접속하여 첫 화면 상단의 공개 안내 배너를 확인합니다.
+                  배포된 웹 URL(새 시크릿 창)로 접속하여 첫 화면으로 나타나는 로그인 화면을 확인합니다. (T07-C03)
                 </p>
               </div>
 
@@ -207,12 +221,13 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   </span>
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-neutral-800 dark:text-neutral-200">
-                  1) [Plan]에서 [계획 수정]을 눌러 내용을 변경하고 [수정 이력]에서 원본 보존을 확인합니다.
+                  1) 데모 계정(User A)으로 로그인하여 5일간의 실제 기록과 3일차 진입 전(2일차 뒤) 계획 규칙 변경 내역을
+                  확인합니다.
                   <br />
-                  2) [Do]에서 특정 할 일의 [실행 기록]을 열고 [연타 멱등성 검증] 버튼을 누릅니다.
+                  2) 상단 [보안 차단 검증]을 눌러 User A ⇄ User B 간의 양방향 읽기·수정·삭제 요청이 403 Forbidden으로
+                  차단되는지 확인합니다.
                   <br />
-                  3) [See]에서 집계 숫자(지연/막힘)를 클릭하여 해당 할 일로 드릴다운 이동하고, 고칠 점을 입력하여 [다음
-                  계획으로 넘기기]를 누릅니다.
+                  3) 상단 [로그아웃]을 누른 뒤 동일 토큰 요청이 거절(401 Unauthorized)되는지 확인합니다.
                 </p>
               </div>
 
@@ -226,8 +241,9 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   </span>
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-neutral-800 dark:text-neutral-200">
-                  수정 전 스냅샷이 이력 모달에 보존되고, 연타 시에도 실행 기록과 완료 집계가 정확히 1건만 늘어나며,
-                  새로고침 후에도 서버 DB로부터 데이터가 그대로 복원됩니다.
+                  로그인 전에는 데이터가 비공개이고, 로그인 후에만 본인 데이터가 복원되며, 상대방 계정 데이터 침범 시
+                  403/404로 거절되고 상대방 데이터가 100% 불변 보존되며, 화면 합계·평균이 수기 검산 값과 완벽히 일치할
+                  때 통과입니다.
                 </p>
               </div>
 
@@ -241,14 +257,14 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   </span>
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-neutral-800 dark:text-neutral-200">
-                  계획 수정 시 이전 내용이 사라지거나, 연타 클릭 시 실행 기록이 2건 중복 등록되어 완료 수가 2 이상
-                  늘어나거나, 새로고침 시 데이터가 초기화됩니다.
+                  로그인하지 않아도 데이터가 노출되거나, User A가 User B의 기밀 데이터를 읽거나 수정할 수 있거나,
+                  로그아웃 후에도 예전 토큰으로 요청이 성공하는 경우 실패입니다.
                 </p>
               </div>
             </div>
           )}
 
-          {/* Tab 2: AI와 내 판단 3줄 (T06-C60) */}
+          {/* Tab 2: AI와 내 판단 3줄 (T07-C40) */}
           {activeTab === '3lines' && (
             <div className="space-y-3.5">
               <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/80 p-4.5 shadow-2xs dark:border-neutral-800/80 dark:bg-neutral-950/60">
@@ -259,8 +275,8 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">① AI에게 맡긴 일</span>
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-neutral-800 dark:text-neutral-200">
-                  PostgreSQL DDL 스키마 작성, React 19 + Tailwind v4 반응형 컴포넌트 구현, 멱등키 생성 및 KST 시간대
-                  차이 계산 로직 작성을 맡겼습니다.
+                  PBKDF2-SHA256 (100,000 Iterations) 키 파생 함수 템플릿 작성, JWT 구조화 토큰 인코딩/만료 TTL 로직
+                  작성, 자동화 테스트 스위트 코드 구성을 맡겼습니다.
                 </p>
               </div>
 
@@ -272,9 +288,9 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">② 내가 직접 판단한 일</span>
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-neutral-800 dark:text-neutral-200">
-                  직접 만들었던 블로그(https://skt-aleph-jinyeongblog.vercel.app)에 수록된 실제 교육 과정인 'SKT ALEPH
-                  1기 기업 현장 중심 보안 & 네트워크 인프라 트랙'의 핵심 커리큘럼(TCP/IP, DNS, VLAN 라우팅, 리눅스
-                  방화벽, Snort IDS/IPS, 제로 트러스트)을 토대로 실제 계획과 할 일, 실행 기록을 반영했습니다.
+                  1일차 관찰 질문과 시간 오차 편차 지표를 확정하고, 3일차 진입 전 20% 버퍼 반영 규칙 변경
+                  시점(2026-09-16 22:30 KST) 및 사유를 결정하였으며, 수기 검산 수식과 화면 통계 일치를 직접
+                  검증하였습니다.
                 </p>
               </div>
 
@@ -288,9 +304,8 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
                   </span>
                 </div>
                 <p className="text-sm leading-relaxed font-medium text-neutral-800 dark:text-neutral-200">
-                  AI가 제안한 단순 브라우저 버튼 비활성화(disabled) 방식만으로는 완벽한 멱등성이 보장되지 않는다고
-                  판단하여, DB 유니크 제약(`UNIQUE(idempotency_key)`) 및 병렬 연타 시뮬레이터 버튼을 직접 추가하도록
-                  수정했습니다.
+                  AI가 제안한 단순 클라이언트 UI 숨김 방식은 IDOR 취약점이 발생하므로 거절하고, 서비스 레이어 403
+                  Forbidden 강제 및 데이터베이스 RLS 정책을 결합한 2중 격리 아키텍처로 구현하였습니다.
                 </p>
               </div>
             </div>
@@ -302,31 +317,12 @@ CREATE POLICY "Allow public all on reviews" ON reviews FOR ALL USING (true) WITH
               <div className="rounded-2xl border border-blue-500/30 bg-blue-50/70 p-4 text-xs text-blue-950 shadow-2xs dark:border-blue-500/30 dark:bg-blue-950/40 dark:text-blue-200">
                 <div className="mb-2 flex items-center gap-2 font-bold">
                   <Database className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span>Supabase 연동 3분 완성 가이드:</span>
+                  <span>과제 7 Supabase PostgreSQL RLS 연동:</span>
                 </div>
-                <ol className="list-inside list-decimal space-y-1.5 leading-relaxed">
-                  <li>
-                    <a
-                      href="https://supabase.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 font-bold underline hover:text-blue-700 dark:hover:text-blue-300"
-                    >
-                      Supabase 대시보드 <ExternalLink className="inline h-3 w-3" />
-                    </a>
-                    에서 새 프로젝트를 생성합니다.
-                  </li>
-                  <li>
-                    좌측 메뉴의 <strong>SQL Editor</strong>로 이동하여 아래 SQL을 복사해 붙여넣고 [Run]을 누릅니다.
-                  </li>
-                  <li>
-                    <strong>Project Settings ➔ API</strong>에서 Project URL과 anon key를 복사하여 프로젝트 루트의{' '}
-                    <code className="rounded bg-blue-100 px-1.5 py-0.5 font-mono text-[11px] text-blue-800 dark:bg-blue-900/60 dark:text-blue-200">
-                      .env.local
-                    </code>
-                    에 추가합니다.
-                  </li>
-                </ol>
+                <p className="leading-relaxed">
+                  SQL Editor에서 아래 DDL 스크립트를 실행하여 users 테이블 및 user_id 외래키, RLS 격리 정책을
+                  구성합니다.
+                </p>
               </div>
 
               <div className="relative">

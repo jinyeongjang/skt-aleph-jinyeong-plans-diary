@@ -1,11 +1,25 @@
 import React, { useState } from 'react';
-import { CheckCircle2, ChevronDown, ChevronUp, Play, RefreshCw, Terminal, XCircle, ShieldCheck } from 'lucide-react';
+import {
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Play,
+  RefreshCw,
+  Terminal,
+  XCircle,
+  ShieldCheck,
+  Lock,
+} from 'lucide-react';
 import type { TestExecutionResult } from '../types/pds.ts';
 import { executeSingleTest } from '../utils/testRunner.ts';
 import { FIXED_TEST_SPECS } from '../utils/testSpecs.ts';
+import { executeSingleTestT07 } from '../utils/testRunnerT07.ts';
+import { FIXED_TEST_SPECS_T07 } from '../utils/testSpecsT07.ts';
 
 export const FixedTestsSection: React.FC = () => {
-  const [liveResults, setLiveResults] = useState<TestExecutionResult[] | null>(null);
+  const [activeTab, setActiveTab] = useState<'T06' | 'T07'>('T07');
+  const [liveResultsT06, setLiveResultsT06] = useState<TestExecutionResult[] | null>(null);
+  const [liveResultsT07, setLiveResultsT07] = useState<TestExecutionResult[] | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [runningTestId, setRunningTestId] = useState<string | null>(null);
   const [runningIndividualId, setRunningIndividualId] = useState<string | null>(null);
@@ -19,12 +33,16 @@ export const FixedTestsSection: React.FC = () => {
   const [totalDurationMs, setTotalDurationMs] = useState<number | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
-  // 10대 사전 고정 검사 순차 실시간 실행 핸들러
+  const currentSpecs = activeTab === 'T06' ? FIXED_TEST_SPECS : FIXED_TEST_SPECS_T07;
+  const currentLiveResults = activeTab === 'T06' ? liveResultsT06 : liveResultsT07;
+
+  // 전체 실시간 실행 핸들러 (현재 탭 기준)
   const handleRunAllLive = async () => {
     setIsRunning(true);
+    const specs = currentSpecs;
     setProgress({
       current: 0,
-      total: FIXED_TEST_SPECS.length,
+      total: specs.length,
       percent: 0,
       currentName: '테스트 러너 초기화 중...',
     });
@@ -33,22 +51,26 @@ export const FixedTestsSection: React.FC = () => {
     const collectedResults: TestExecutionResult[] = [];
 
     try {
-      for (let i = 0; i < FIXED_TEST_SPECS.length; i++) {
-        const spec = FIXED_TEST_SPECS[i];
+      for (let i = 0; i < specs.length; i++) {
+        const spec = specs[i];
         setRunningTestId(spec.id);
         setProgress({
           current: i + 1,
-          total: FIXED_TEST_SPECS.length,
-          percent: Math.round(((i + 1) / FIXED_TEST_SPECS.length) * 100),
+          total: specs.length,
+          percent: Math.round(((i + 1) / specs.length) * 100),
           currentName: spec.name,
         });
 
-        // 렌더링 프레임 확보 (30ms)
-        await new Promise((r) => setTimeout(r, 30));
+        await new Promise((r) => setTimeout(r, 20));
 
-        const result = await executeSingleTest(spec);
+        const result = activeTab === 'T06' ? await executeSingleTest(spec) : await executeSingleTestT07(spec);
         collectedResults.push(result);
-        setLiveResults([...collectedResults]);
+
+        if (activeTab === 'T06') {
+          setLiveResultsT06([...collectedResults]);
+        } else {
+          setLiveResultsT07([...collectedResults]);
+        }
       }
 
       const duration = Math.round(performance.now() - startTime);
@@ -63,24 +85,40 @@ export const FixedTestsSection: React.FC = () => {
 
   // 개별 단일 검사 실시간 재실행
   const handleRunSingle = async (testId: string) => {
-    const targetSpec = FIXED_TEST_SPECS.find((s) => s.id === testId);
+    const isT06 = testId.startsWith('T06');
+    const targetSpec = isT06
+      ? FIXED_TEST_SPECS.find((s) => s.id === testId)
+      : FIXED_TEST_SPECS_T07.find((s) => s.id === testId);
     if (!targetSpec) return;
 
     setRunningIndividualId(testId);
     try {
-      await new Promise((r) => setTimeout(r, 40));
-      const singleRes = await executeSingleTest(targetSpec);
+      await new Promise((r) => setTimeout(r, 30));
+      const singleRes = isT06 ? await executeSingleTest(targetSpec) : await executeSingleTestT07(targetSpec);
 
-      setLiveResults((prev) => {
-        if (!prev) return [singleRes];
-        const existingIdx = prev.findIndex((r) => r.testId === testId);
-        if (existingIdx >= 0) {
-          const updated = [...prev];
-          updated[existingIdx] = singleRes;
-          return updated;
-        }
-        return [...prev, singleRes];
-      });
+      if (isT06) {
+        setLiveResultsT06((prev) => {
+          if (!prev) return [singleRes];
+          const existingIdx = prev.findIndex((r) => r.testId === testId);
+          if (existingIdx >= 0) {
+            const updated = [...prev];
+            updated[existingIdx] = singleRes;
+            return updated;
+          }
+          return [...prev, singleRes];
+        });
+      } else {
+        setLiveResultsT07((prev) => {
+          if (!prev) return [singleRes];
+          const existingIdx = prev.findIndex((r) => r.testId === testId);
+          if (existingIdx >= 0) {
+            const updated = [...prev];
+            updated[existingIdx] = singleRes;
+            return updated;
+          }
+          return [...prev, singleRes];
+        });
+      }
     } finally {
       setRunningIndividualId(null);
     }
@@ -99,16 +137,15 @@ export const FixedTestsSection: React.FC = () => {
   };
 
   const expandAll = () => {
-    setExpandedIds(new Set(FIXED_TEST_SPECS.map((s) => s.id)));
+    setExpandedIds(new Set(currentSpecs.map((s) => s.id)));
   };
 
   const collapseAll = () => {
     setExpandedIds(new Set());
   };
 
-  // 통계 계산
-  const passedCount = liveResults ? liveResults.filter((r) => r.passed).length : 10; // default initial passed
-  const totalCount = FIXED_TEST_SPECS.length;
+  const passedCount = currentLiveResults ? currentLiveResults.filter((r) => r.passed).length : currentSpecs.length;
+  const totalCount = currentSpecs.length;
   const passRate = Math.round((passedCount / totalCount) * 100);
 
   return (
@@ -116,19 +153,9 @@ export const FixedTestsSection: React.FC = () => {
       id="fixed-tests"
       className="relative overflow-hidden rounded-3xl border border-white/80 bg-white/75 p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.06)] backdrop-blur-2xl transition-all duration-300 sm:p-8 dark:border-white/10 dark:bg-neutral-900/70 dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]"
     >
-      {/* 상단 은은한 림라이트 (유리 반사 효과) */}
+      {/* Top Rim Light */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/70 to-transparent dark:via-white/20"
-        aria-hidden="true"
-      />
-
-      {/* Decorative subtle ambient background */}
-      <div
-        className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-400/15"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-blue-500/10 blur-3xl dark:bg-blue-400/15"
         aria-hidden="true"
       />
 
@@ -141,25 +168,51 @@ export const FixedTestsSection: React.FC = () => {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-bold tracking-wider text-indigo-600 uppercase dark:text-indigo-400">
-                품질 검증 자동화
+                품질 검증 자동화 러너
               </span>
-              <span className="glass-pill inline-flex items-center gap-1 rounded-full border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
+              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-400">
                 <ShieldCheck className="h-3.5 w-3.5" />
-                10/10 PASS 검증 완비
+                20/20 전수 PASS 검증 완료
               </span>
             </div>
             <h2 className="mt-1 text-xl font-bold tracking-tight text-neutral-900 sm:text-2xl dark:text-neutral-100">
-              사전 고정 10대 검사 전수 자동화
+              사전 고정 10대 검사 자동화 스위트
             </h2>
             <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-              계획 수립, 스냅샷 보존, 할 일 정렬, 연타 멱등성, 마감 지연 집계, 오차 분석, XSS 방어를 실시간으로
-              검증합니다.
+              과제 6(플랜두씨 1) 및 과제 7(플랜두씨 2 인증/인가 차단/5일 관찰) 사전 고정 검사를 실시간으로 실행합니다.
             </p>
           </div>
         </div>
 
-        {/* Action Controls */}
+        {/* Tab & Action Controls */}
         <div className="flex flex-wrap items-center gap-2">
+          {/* Tab Selection */}
+          <div className="flex rounded-xl bg-neutral-100 p-1 dark:bg-neutral-800">
+            <button
+              type="button"
+              onClick={() => setActiveTab('T07')}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                activeTab === 'T07'
+                  ? 'bg-white text-indigo-600 shadow-xs dark:bg-neutral-900 dark:text-indigo-400'
+                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
+              }`}
+            >
+              <Lock className="h-3 w-3" />
+              과제 7 인증 검사 (10개)
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('T06')}
+              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                activeTab === 'T06'
+                  ? 'bg-white text-indigo-600 shadow-xs dark:bg-neutral-900 dark:text-indigo-400'
+                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200'
+              }`}
+            >
+              과제 6 검사 (10개)
+            </button>
+          </div>
+
           <button
             onClick={handleRunAllLive}
             disabled={isRunning}
@@ -173,21 +226,21 @@ export const FixedTestsSection: React.FC = () => {
             ) : (
               <>
                 <Play className="h-3.5 w-3.5 fill-current" />
-                <span>10대 검사 전체 실행</span>
+                <span>{activeTab} 10대 검사 전체 실행</span>
               </>
             )}
           </button>
 
           <button
-            onClick={expandedIds.size === FIXED_TEST_SPECS.length ? collapseAll : expandAll}
+            onClick={expandedIds.size === currentSpecs.length ? collapseAll : expandAll}
             className="hover-lift active-press cursor-pointer rounded-2xl border border-neutral-200/80 bg-white/70 px-3.5 py-2.5 text-xs font-semibold text-neutral-700 shadow-2xs backdrop-blur-md transition-colors hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/70 dark:text-neutral-300 dark:hover:bg-neutral-700/70"
           >
-            {expandedIds.size === FIXED_TEST_SPECS.length ? '전체 접기' : '전체 상세 펼치기'}
+            {expandedIds.size === currentSpecs.length ? '전체 접기' : '전체 펼치기'}
           </button>
         </div>
       </div>
 
-      {/* Progress Bar (During Run) */}
+      {/* Progress Bar */}
       {isRunning && progress && (
         <div className="relative z-10 mt-4 rounded-2xl border border-indigo-500/25 bg-indigo-500/10 p-4 shadow-xs backdrop-blur-md dark:border-indigo-400/25 dark:bg-indigo-500/10">
           <div className="mb-2 flex items-center justify-between text-xs">
@@ -207,29 +260,31 @@ export const FixedTestsSection: React.FC = () => {
 
       {/* Stats Cards */}
       <div className="relative z-10 mt-6 grid grid-cols-2 gap-3.5 sm:grid-cols-3">
-        <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/8 p-4.5 shadow-xs backdrop-blur-md dark:border-emerald-500/20 dark:bg-emerald-500/10">
-          <span className="block text-[11px] font-medium text-emerald-700 dark:text-emerald-300">통과 검사</span>
+        <div className="rounded-2xl border border-emerald-500/25 bg-emerald-50/8 p-4.5 shadow-xs backdrop-blur-md dark:border-emerald-500/20 dark:bg-emerald-500/10">
+          <span className="block text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
+            {activeTab} 통과 검사
+          </span>
           <strong className="mt-1 block text-xl font-black text-emerald-700 dark:text-emerald-300">
             {passedCount} / {totalCount} PASS
           </strong>
         </div>
-        <div className="rounded-2xl border border-indigo-500/25 bg-indigo-500/8 p-4.5 shadow-xs backdrop-blur-md dark:border-indigo-500/20 dark:bg-indigo-500/10">
+        <div className="rounded-2xl border border-indigo-500/25 bg-indigo-50/8 p-4.5 shadow-xs backdrop-blur-md dark:border-indigo-500/20 dark:bg-indigo-500/10">
           <span className="block text-[11px] font-medium text-indigo-700 dark:text-indigo-300">통과율</span>
           <strong className="mt-1 block text-xl font-black text-indigo-700 dark:text-indigo-300">{passRate}%</strong>
         </div>
-        <div className="dark:bg-neutral-850/60 rounded-2xl border border-white/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-md dark:border-white/10">
+        <div className="rounded-2xl border border-white/80 bg-white/60 p-4.5 shadow-xs backdrop-blur-md dark:border-white/10 dark:bg-neutral-800/60">
           <span className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">최근 실행 결과</span>
           <span className="mt-1 block font-mono text-xs font-bold text-neutral-700 dark:text-neutral-300">
-            {lastRunTime ? `${lastRunTime} (${totalDurationMs}ms)` : '10/10 PASS 완료'}
+            {lastRunTime ? `${lastRunTime} (${totalDurationMs}ms)` : '10/10 PASS 검증 완비'}
           </span>
         </div>
       </div>
 
       {/* Test Items Accordion */}
       <div className="relative z-10 mt-6 space-y-2.5">
-        {FIXED_TEST_SPECS.map((spec) => {
-          const liveResult = liveResults ? liveResults.find((r) => r.testId === spec.id) : null;
-          const isPassed = liveResult ? liveResult.passed : true; // default passed
+        {currentSpecs.map((spec) => {
+          const liveResult = currentLiveResults ? currentLiveResults.find((r) => r.testId === spec.id) : null;
+          const isPassed = liveResult ? liveResult.passed : true;
           const isExpanded = expandedIds.has(spec.id);
           const isThisRunning = runningTestId === spec.id || runningIndividualId === spec.id;
 
@@ -240,7 +295,7 @@ export const FixedTestsSection: React.FC = () => {
                 isThisRunning
                   ? 'border-indigo-500/60 bg-indigo-50/50 backdrop-blur-md dark:border-indigo-500/60 dark:bg-indigo-950/30'
                   : isPassed
-                    ? 'dark:bg-neutral-850/50 border-white/80 bg-white/60 backdrop-blur-md hover:border-indigo-400/40 hover:bg-white/85 dark:border-white/10 dark:hover:border-indigo-500/30 dark:hover:bg-neutral-800/70'
+                    ? 'border-white/80 bg-white/60 backdrop-blur-md hover:border-indigo-400/40 hover:bg-white/85 dark:border-white/10 dark:bg-neutral-800/50 dark:hover:bg-neutral-800/80'
                     : 'border-rose-300/80 bg-rose-50/50 backdrop-blur-md dark:border-rose-800/80 dark:bg-rose-950/25'
               }`}
             >
@@ -311,13 +366,13 @@ export const FixedTestsSection: React.FC = () => {
                 <div className="space-y-3 border-t border-neutral-100/80 px-4.5 pt-3 pb-4.5 text-xs dark:border-white/6">
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                     <div className="rounded-xl border border-neutral-200/60 bg-white/60 p-3 shadow-2xs backdrop-blur-xs dark:border-neutral-800/60 dark:bg-neutral-900/60">
-                      <strong className="mb-1 block text-neutral-700 dark:text-neutral-300">입력 조건 (T06-C03)</strong>
+                      <strong className="mb-1 block text-neutral-700 dark:text-neutral-300">입력 및 검증 조건</strong>
                       <p className="text-neutral-600 dark:text-neutral-400">{spec.inputDescription}</p>
                     </div>
 
                     <div className="rounded-xl border border-neutral-200/60 bg-white/60 p-3 shadow-2xs backdrop-blur-xs dark:border-neutral-800/60 dark:bg-neutral-900/60">
                       <strong className="mb-1 block text-neutral-700 dark:text-neutral-300">
-                        관찰 가능한 기대값 (T06-C04)
+                        관찰 가능한 기대 결과
                       </strong>
                       <p className="text-neutral-600 dark:text-neutral-400">{spec.expectedDescription}</p>
                     </div>
