@@ -11,6 +11,10 @@ import {
   AlertTriangle,
   BookOpen,
   Terminal,
+  Eye,
+  EyeOff,
+  Shield,
+  CheckCircle2,
 } from 'lucide-react';
 import { loginUser, registerUser, DEFAULT_USER_A, DEFAULT_USER_B } from '../services/authService.ts';
 import type { AuthSession } from '../types/auth.ts';
@@ -53,6 +57,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
   const [tab, setTab] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -100,16 +105,16 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
       {/* 1. 상단 안내 고지 (T07-C03 & T07-C46) */}
       <motion.div
         variants={itemVariants}
-        className="relative mb-6 w-full max-w-4xl overflow-hidden rounded-2xl border-indigo-500/25 p-4 text-center shadow-[0_4px_24px_rgba(99,102,241,0.08)] backdrop-blur-xl dark:border-indigo-400/25 dark:from-indigo-950/40 dark:via-purple-950/30 dark:to-indigo-950/40"
+        className="relative mb-6 w-full max-w-4xl overflow-hidden rounded-2xl border border-indigo-500/25 bg-gradient-to-r from-indigo-50/80 via-purple-50/60 to-indigo-50/80 p-4 text-center shadow-[0_4px_24px_rgba(99,102,241,0.08)] backdrop-blur-xl dark:border-indigo-400/25 dark:from-indigo-950/40 dark:via-purple-950/30 dark:to-indigo-950/40"
       >
         {/* Top Rim Light */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-indigo-400/50 to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent"
           aria-hidden="true"
         />
 
         <div className="flex items-center justify-center gap-2 text-sm font-semibold text-indigo-950 dark:text-indigo-200">
-          <div className="flex h-5 w-5 items-center justify-center rounded-md text-indigo-600 dark:bg-indigo-400/20 dark:text-indigo-300">
+          <div className="flex h-5 w-5 items-center justify-center rounded-md bg-indigo-100 text-indigo-600 dark:bg-indigo-400/20 dark:text-indigo-300">
             <ShieldCheck className="h-3.5 w-3.5" />
           </div>
           <span>과제 7: 플랜두씨 다이어리 2 — 인증이 적용된 비공개 다이어리</span>
@@ -127,7 +132,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
         >
           {/* Top Rim Highlight & Ambient Lighting with smooth pulse */}
           <div
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/90 to-transparent dark:via-white/20"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent dark:via-white/20"
             aria-hidden="true"
           />
           <motion.div
@@ -161,7 +166,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                   transition: { type: 'spring', stiffness: 400, damping: 20 },
                 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-indigo-500/30 bg-linear-to-br from-white/90 to-indigo-50/80 p-1 shadow-lg shadow-indigo-500/15 backdrop-blur-xl sm:h-20 sm:w-20 dark:border-indigo-400/30 dark:from-neutral-800/90 dark:to-indigo-950/50"
+                className="relative h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-white/90 to-indigo-50/80 p-1 shadow-lg shadow-indigo-500/15 backdrop-blur-xl sm:h-28 sm:w-28 dark:border-indigo-400/30 dark:from-neutral-800/90 dark:to-indigo-950/50"
               >
                 <img
                   src="/plandosee-mascot.png"
@@ -174,7 +179,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                   initial={{ scale: 0.92, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.15 }}
-                  className="rounded-fullpx-2.5 inline-flex items-center gap-1.5 py-0.5 text-xs font-semibold text-emerald-700 backdrop-blur-md dark:border-emerald-400/25 dark:bg-emerald-500/15 dark:text-emerald-300"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-50/80 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 backdrop-blur-md dark:border-emerald-400/25 dark:bg-emerald-500/15 dark:text-emerald-300"
                 >
                   <Sparkles className="h-3 w-3" />
                   PBKDF2-SHA256 & JWT 세션 보호
@@ -205,7 +210,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                   type="button"
                   onClick={() => handleQuickLogin(DEFAULT_USER_A.email)}
                   disabled={isLoading}
-                  className="hover-lift active-press group flex w-full cursor-pointer items-center justify-between rounded-xl border border-indigo-200/80 bg-linear-to-r from-indigo-50/90 via-indigo-100/60 to-indigo-50/80 p-3 text-left transition-all hover:border-indigo-400/70 hover:shadow-md hover:shadow-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 dark:border-indigo-800/50 dark:from-indigo-950/60 dark:via-indigo-900/40 dark:to-indigo-950/50 dark:hover:border-indigo-600/70"
+                  className="hover-lift active-press group flex w-full cursor-pointer items-center justify-between rounded-xl border border-indigo-200/80 bg-gradient-to-r from-indigo-50/90 via-indigo-100/60 to-indigo-50/80 p-3 text-left transition-all hover:border-indigo-400/70 hover:shadow-md hover:shadow-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 dark:border-indigo-800/50 dark:from-indigo-950/60 dark:via-indigo-900/40 dark:to-indigo-950/50 dark:hover:border-indigo-600/70"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-indigo-500/25 bg-white/80 text-indigo-600 shadow-2xs backdrop-blur-md transition-transform duration-200 group-hover:scale-105 dark:border-indigo-400/25 dark:bg-neutral-800/80 dark:text-indigo-400">
@@ -228,7 +233,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                   type="button"
                   onClick={() => handleQuickLogin(DEFAULT_USER_B.email)}
                   disabled={isLoading}
-                  className="hover-lift active-press group flex w-full cursor-pointer items-center justify-between rounded-xl border border-rose-200/80 bg-linear-to-r from-rose-50/90 via-rose-100/60 to-rose-50/80 p-3 text-left transition-all hover:border-rose-400/70 hover:shadow-md hover:shadow-rose-500/10 disabled:cursor-not-allowed disabled:opacity-60 dark:border-rose-800/50 dark:from-rose-950/60 dark:via-rose-900/40 dark:to-rose-950/50 dark:hover:border-rose-600/70"
+                  className="hover-lift active-press group flex w-full cursor-pointer items-center justify-between rounded-xl border border-rose-200/80 bg-gradient-to-r from-rose-50/90 via-rose-100/60 to-rose-50/80 p-3 text-left transition-all hover:border-rose-400/70 hover:shadow-md hover:shadow-rose-500/10 disabled:cursor-not-allowed disabled:opacity-60 dark:border-rose-800/50 dark:from-rose-950/60 dark:via-rose-900/40 dark:to-rose-950/50 dark:hover:border-rose-600/70"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-rose-500/25 bg-white/80 text-rose-600 shadow-2xs backdrop-blur-md transition-transform duration-200 group-hover:scale-105 dark:border-rose-400/25 dark:bg-neutral-800/80 dark:text-rose-400">
@@ -280,7 +285,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
         >
           {/* Top Rim Highlight & Ambient Lighting with smooth pulse */}
           <div
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/90 to-transparent dark:via-white/20"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent dark:via-white/20"
             aria-hidden="true"
           />
           <motion.div
@@ -299,6 +304,33 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
           />
 
           <div className="relative z-10">
+            {/* 상단 자물쇠 보안 아이콘 & 보안 헤더 */}
+            <div className="mb-6 flex flex-col items-center text-center">
+              <motion.div
+                animate={{
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-500/15 via-purple-500/10 to-indigo-500/20 shadow-lg shadow-indigo-500/10 backdrop-blur-xl dark:border-indigo-400/30 dark:from-indigo-400/20 dark:via-purple-400/15 dark:to-indigo-400/10"
+              >
+                {/* Pulsing security status badge */}
+                <div className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center"></div>
+                <Lock className="h-6 w-6 text-indigo-600 drop-shadow-xs dark:text-indigo-300" />
+              </motion.div>
+              <h2 className="text-xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
+                플랜두씨 들어가기
+              </h2>
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                {tab === 'login'
+                  ? '암호화된 다이어리 공간으로 안전하게 로그인하세요'
+                  : '나만의 프라이빗 다이어리 계정을 생성하고 시작하세요'}
+              </p>
+            </div>
+
             {/* 세련된 글래스모피즘 세그먼트 탭 with Smooth Sliding Pill */}
             <div className="relative flex rounded-2xl border border-neutral-200/70 bg-neutral-100/80 p-1.5 backdrop-blur-md dark:border-white/10 dark:bg-neutral-950/70">
               <button
@@ -307,7 +339,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                   setTab('login');
                   setErrorMsg(null);
                 }}
-                className={`relative z-10 flex-1 cursor-pointer rounded-xl py-2.5 text-xs font-bold transition-colors duration-200 ${
+                className={`relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition-colors duration-200 ${
                   tab === 'login'
                     ? 'text-neutral-900 dark:text-neutral-100'
                     : 'text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200'
@@ -320,6 +352,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
                 )}
+                <Lock className="relative z-20 h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400" />
                 <span className="relative z-20">로그인</span>
               </button>
               <button
@@ -328,7 +361,7 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                   setTab('register');
                   setErrorMsg(null);
                 }}
-                className={`relative z-10 flex-1 cursor-pointer rounded-xl py-2.5 text-xs font-bold transition-colors duration-200 ${
+                className={`relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition-colors duration-200 ${
                   tab === 'register'
                     ? 'text-neutral-900 dark:text-neutral-100'
                     : 'text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200'
@@ -341,11 +374,12 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
                 )}
+                <Sparkles className="relative z-20 h-3.5 w-3.5 text-amber-500 dark:text-amber-400" />
                 <span className="relative z-20">신규 회원가입</span>
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <form onSubmit={handleSubmit} className="mt-5 space-y-4">
               <AnimatePresence mode="wait">
                 {errorMsg && (
                   <motion.div
@@ -353,17 +387,21 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                     animate={{ opacity: 1, height: 'auto', y: 0 }}
                     exit={{ opacity: 0, height: 0, y: -8 }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden rounded-xl border border-rose-300/80 bg-rose-50/90 p-3 text-xs font-medium text-rose-800 shadow-2xs backdrop-blur-md dark:border-rose-900/60 dark:bg-rose-950/70 dark:text-rose-300"
+                    className="flex items-start gap-2 overflow-hidden rounded-xl border border-rose-300/80 bg-rose-50/90 p-3 text-xs font-medium text-rose-800 shadow-2xs backdrop-blur-md dark:border-rose-900/60 dark:bg-rose-950/70 dark:text-rose-300"
                   >
-                    {errorMsg}
+                    <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-rose-600 dark:text-rose-400" />
+                    <span className="leading-snug">{errorMsg}</span>
                   </motion.div>
                 )}
               </AnimatePresence>
 
               <div className="group">
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                  이메일 주소
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                    이메일 주소
+                  </label>
+                  <span className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500">필수</span>
+                </div>
                 <div className="relative mt-1.5">
                   <Mail className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400 transition-colors duration-200 group-focus-within:text-indigo-500 dark:text-neutral-500 dark:group-focus-within:text-indigo-400" />
                   <input
@@ -378,17 +416,29 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
               </div>
 
               <div className="group">
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">비밀번호</label>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">비밀번호</label>
+                  <span className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500">필수</span>
+                </div>
                 <div className="relative mt-1.5">
                   <KeyRound className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400 transition-colors duration-200 group-focus-within:text-indigo-500 dark:text-neutral-500 dark:group-focus-within:text-indigo-400" />
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••••••"
-                    className="w-full rounded-xl border border-neutral-200/80 bg-white/70 py-2.5 pr-4 pl-10 text-sm text-neutral-900 shadow-inner backdrop-blur-md transition-all outline-none placeholder:text-neutral-400 focus:border-indigo-500/80 focus:bg-white focus:ring-4 focus:ring-indigo-500/15 dark:border-white/10 dark:bg-neutral-950/60 dark:text-neutral-100 dark:placeholder:text-neutral-600 dark:focus:border-indigo-400/80 dark:focus:bg-neutral-950 dark:focus:ring-indigo-400/20"
+                    className="w-full rounded-xl border border-neutral-200/80 bg-white/70 py-2.5 pr-10 pl-10 text-sm text-neutral-900 shadow-inner backdrop-blur-md transition-all outline-none placeholder:text-neutral-400 focus:border-indigo-500/80 focus:bg-white focus:ring-4 focus:ring-indigo-500/15 dark:border-white/10 dark:bg-neutral-950/60 dark:text-neutral-100 dark:placeholder:text-neutral-600 dark:focus:border-indigo-400/80 dark:focus:bg-neutral-950 dark:focus:ring-indigo-400/20"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer p-1 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300"
+                    title={showPassword ? '비밀번호 숨기기' : '비밀번호 표시'}
+                    aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 표시'}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
                 <p className="mt-1.5 text-[11px] leading-relaxed text-neutral-500 dark:text-neutral-400">
                   비밀번호는 PBKDF2-SHA256 단방향 해시 및 고유 솔트로 안전하게 암호화 보관됩니다.
@@ -401,10 +451,10 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
                 transition={{ type: 'spring', stiffness: 450, damping: 25 }}
                 type="submit"
                 disabled={isLoading}
-                className="hover-lift active-press group relative mt-3 flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-2xl bg-linear-to-r from-indigo-600 via-indigo-500 to-indigo-700 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:via-indigo-400 hover:to-indigo-600 hover:shadow-indigo-500/35 disabled:cursor-not-allowed disabled:opacity-50 dark:shadow-indigo-950/50"
+                className="hover-lift active-press group relative mt-2 flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-700 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:via-indigo-400 hover:to-indigo-600 hover:shadow-indigo-500/35 disabled:cursor-not-allowed disabled:opacity-50 dark:shadow-indigo-950/50"
               >
                 {/* Button shine overlay */}
-                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-transparent via-white/10 to-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 {isLoading ? (
                   <span className="inline-flex items-center gap-2">
                     <svg className="h-4 w-4 animate-spin text-white" viewBox="0 0 24 24" fill="none">
@@ -427,7 +477,26 @@ export const AuthLandingSection: React.FC<AuthLandingSectionProps> = ({
               </motion.button>
             </form>
 
-            <div className="mt-5 text-center text-[11px] font-medium text-neutral-400 dark:text-neutral-500">
+            {/* 3대 보안 스펙 미니 뱃지 */}
+            <div className="mt-5 grid grid-cols-3 gap-2 border-t border-neutral-200/60 pt-4 dark:border-white/10">
+              <div className="flex flex-col items-center rounded-xl bg-neutral-100/60 p-2 text-center backdrop-blur-xs dark:bg-white/5">
+                <Shield className="h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400" />
+                <span className="mt-1 text-[10px] font-bold text-neutral-700 dark:text-neutral-300">단방향 암호화</span>
+                <span className="text-[9px] text-neutral-400">PBKDF2-SHA256</span>
+              </div>
+              <div className="flex flex-col items-center rounded-xl bg-neutral-100/60 p-2 text-center backdrop-blur-xs dark:bg-white/5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
+                <span className="mt-1 text-[10px] font-bold text-neutral-700 dark:text-neutral-300">데이터 격리</span>
+                <span className="text-[9px] text-neutral-400">Zero Leaks</span>
+              </div>
+              <div className="flex flex-col items-center rounded-xl bg-neutral-100/60 p-2 text-center backdrop-blur-xs dark:bg-white/5">
+                <Lock className="h-3.5 w-3.5 text-violet-500 dark:text-violet-400" />
+                <span className="mt-1 text-[10px] font-bold text-neutral-700 dark:text-neutral-300">세션 보호</span>
+                <span className="text-[9px] text-neutral-400">JWT Bearer</span>
+              </div>
+            </div>
+
+            <div className="mt-3.5 text-center text-[11px] font-medium text-neutral-400 dark:text-neutral-500">
               과제 7 통과 기준 충족: 비밀번호 평문 미저장 (T07-C103) · 토큰 수명 관리 (T07-C111)
             </div>
           </div>
