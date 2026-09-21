@@ -4,7 +4,7 @@ export const USER_A_ID = 'usr-jinyeong-001';
 export const USER_B_ID = 'usr-attacker-002';
 
 export const INITIAL_PLAN_ID = 'e7b0a850-6e42-4f91-a67b-1a9829f04123';
-export const ATTACKER_PLAN_ID = 'plan-attacker-secret-999';
+export const ATTACKER_PLAN_ID = 'plan-attacker-secret';
 
 /**
  * SKT ALEPH 1기: 기업 현장 중심 보안 & 네트워크 인프라 트랙 실제 교육 계획
@@ -204,7 +204,7 @@ export const USER_B_PLAN: Plan = {
 };
 
 export const USER_B_TODO: Todo = {
-  id: 'todo-attacker-secret-888',
+  id: 'todo-attacker-secret',
   plan_id: ATTACKER_PLAN_ID,
   user_id: USER_B_ID,
   content: 'User B 전용 기밀 할 일 데이터 (User A가 접근 시 403 Forbidden 차단 대상)',

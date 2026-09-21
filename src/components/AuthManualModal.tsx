@@ -243,9 +243,9 @@ User B (attacker): salt='salt_attacker_rnd9923', hash='pbkdf2_sha256$100000$...0
                     증적 3: User A 토큰으로 User B 기밀 계획 읽기·수정·삭제 차단 (T07-C117 ~ C119)
                   </div>
                   <pre className="mt-2 overflow-x-auto rounded-lg bg-neutral-900 p-2.5 font-mono text-[11px] text-rose-400">
-                    {`GET /api/plans/plan-attacker-secret-999 ➔ 403 Forbidden (src/services/pdsService.ts#L137)
-PATCH /api/todos/todo-attacker-secret-888 ➔ 403 Forbidden (src/services/pdsService.ts#L365)
-DELETE /api/todos/todo-attacker-secret-888 ➔ 403 Forbidden (src/services/pdsService.ts#L365)
+                    {`GET /api/plans/plan-attacker-secret ➔ 403 Forbidden (src/services/pdsService.ts#L137)
+PATCH /api/todos/todo-attacker-secret ➔ 403 Forbidden (src/services/pdsService.ts#L365)
+DELETE /api/todos/todo-attacker-secret ➔ 403 Forbidden (src/services/pdsService.ts#L365)
 ➔ 거절 전후 User B 데이터 건수 및 내용 100% 불변 보존 (T07-C122)`}
                   </pre>
                 </div>

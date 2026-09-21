@@ -122,7 +122,7 @@ export const ObservationDashboardSection: React.FC = () => {
           <h3 className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
             📅 Asia/Seoul 5일 연속 실행 기록 타임라인
           </h3>
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">2026-09-15 ~ 2026-09-19</span>
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">2026-09-17 ~ 2026-09-21</span>
         </div>
 
         <div className="space-y-3">

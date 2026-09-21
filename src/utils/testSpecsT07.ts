@@ -56,7 +56,7 @@ export const FIXED_TEST_SPECS_T07: FixedTestCase[] = [
     id: 'T07-TEST-05',
     name: 'User A의 토큰으로 User B의 비밀 데이터 단건 읽기 시도 시 403 Forbidden 차단',
     category: 'security',
-    inputDescription: 'User A가 User B 소유의 비밀 계획(plan-attacker-secret-999) 단건 조회(GET) 요청',
+    inputDescription: 'User A가 User B 소유의 비밀 계획(plan-attacker-secret) 단건 조회(GET) 요청',
     expectedDescription: 'T07-C117, T07-C121, T07-C126에 따라 403 Forbidden 거절이 발생하고 소스 위치가 명시됨',
     boundaryNote: '존재 감춤을 위한 404 또는 명시적 403 반환',
     passedInA: true,
